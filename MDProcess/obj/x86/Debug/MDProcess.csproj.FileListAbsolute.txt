@@ -1,0 +1,14 @@
+D:\temp\CTPAPI\ProgrammeTrade\MDProcess\bin\Debug\app.config
+D:\temp\CTPAPI\ProgrammeTrade\MDProcess\bin\Debug\MDProcess.exe.config
+D:\temp\CTPAPI\ProgrammeTrade\MDProcess\bin\Debug\MDProcess.exe
+D:\temp\CTPAPI\ProgrammeTrade\MDProcess\bin\Debug\MDProcess.pdb
+D:\temp\CTPAPI\ProgrammeTrade\MDProcess\bin\Debug\MySql.Data.dll
+D:\temp\CTPAPI\ProgrammeTrade\MDProcess\bin\Debug\PubTools.dll
+D:\temp\CTPAPI\ProgrammeTrade\MDProcess\bin\Debug\PubTools.pdb
+D:\temp\CTPAPI\ProgrammeTrade\MDProcess\obj\x86\Debug\MDProcess.csprojResolveAssemblyReference.cache
+D:\temp\CTPAPI\ProgrammeTrade\MDProcess\obj\x86\Debug\MDProcess.FormMDProcess.resources
+D:\temp\CTPAPI\ProgrammeTrade\MDProcess\obj\x86\Debug\MDProcess.Properties.Resources.resources
+D:\temp\CTPAPI\ProgrammeTrade\MDProcess\obj\x86\Debug\MDProcess.csproj.GenerateResource.Cache
+D:\temp\CTPAPI\ProgrammeTrade\MDProcess\obj\x86\Debug\MDProcess.exe.licenses
+D:\temp\CTPAPI\ProgrammeTrade\MDProcess\obj\x86\Debug\MDProcess.exe
+D:\temp\CTPAPI\ProgrammeTrade\MDProcess\obj\x86\Debug\MDProcess.pdb

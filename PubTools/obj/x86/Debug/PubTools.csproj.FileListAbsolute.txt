@@ -1,0 +1,5 @@
+D:\temp\CTPAPI\ProgrammeTrade\PubTools\bin\Debug\PubTools.dll
+D:\temp\CTPAPI\ProgrammeTrade\PubTools\bin\Debug\PubTools.pdb
+D:\temp\CTPAPI\ProgrammeTrade\PubTools\obj\x86\Debug\PubTools.dll
+D:\temp\CTPAPI\ProgrammeTrade\PubTools\obj\x86\Debug\PubTools.pdb
+D:\temp\CTPAPI\ProgrammeTrade\PubTools\obj\x86\Debug\PubTools.csprojResolveAssemblyReference.cache

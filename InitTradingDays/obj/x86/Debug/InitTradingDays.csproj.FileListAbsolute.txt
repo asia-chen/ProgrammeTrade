@@ -1,0 +1,9 @@
+D:\temp\CTPAPI\ProgrammeTrade\InitTradingDays\bin\Debug\app.config
+D:\temp\CTPAPI\ProgrammeTrade\InitTradingDays\bin\Debug\InitTradingDays.exe.config
+D:\temp\CTPAPI\ProgrammeTrade\InitTradingDays\bin\Debug\InitTradingDays.exe
+D:\temp\CTPAPI\ProgrammeTrade\InitTradingDays\bin\Debug\InitTradingDays.pdb
+D:\temp\CTPAPI\ProgrammeTrade\InitTradingDays\bin\Debug\PubTools.dll
+D:\temp\CTPAPI\ProgrammeTrade\InitTradingDays\bin\Debug\PubTools.pdb
+D:\temp\CTPAPI\ProgrammeTrade\InitTradingDays\obj\x86\Debug\InitTradingDays.csprojResolveAssemblyReference.cache
+D:\temp\CTPAPI\ProgrammeTrade\InitTradingDays\obj\x86\Debug\InitTradingDays.exe
+D:\temp\CTPAPI\ProgrammeTrade\InitTradingDays\obj\x86\Debug\InitTradingDays.pdb
