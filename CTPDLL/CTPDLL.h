@@ -10,10 +10,10 @@
 typedef void (*CallbackDelegate)(const char* inputStr, int nRequestID, int bIsLast);
 #define DLLEXPORT extern "C" __declspec(dllexport)
 
-DLLEXPORT int TradeInitAPI(char *server_addr, CallbackDelegate callback);
+DLLEXPORT int TradeInitAPI(char *server_addr, CallbackDelegate callback, char *tradeUser);
+DLLEXPORT int MdInitAPI(char *server_addr, CallbackDelegate callback);
 DLLEXPORT int TradeSendRequest(char *req);
-static CallbackDelegate tradeCallback = NULL;
-int TradeResponse(char *result,int nRequestID, int bIsLast);
+int TradeResponse(char *result, int nRequestID, int bIsLast, int indicator);
 int MdResponse(char *result);
 
-
+#define MAXUSERS 20

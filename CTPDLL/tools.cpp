@@ -1,6 +1,7 @@
+#include "stdafx.h"
 #include "tools.h"
 
-char *splitstr = "><";
+extern char *splitstr;
 
 // 供cpp使用的一些公共函数
 
@@ -22,14 +23,6 @@ int split(char *instr, vector<string> *v)
 	return 0;
 }
 
-// char转字符串
-string ctos(char c)
-{
-	char temp[2];
-	temp[0] = c;
-	temp[1] = 0;
-	return (string)temp;
-}
 // long long转字符串
 string ltos(long long lInput)
 {
@@ -38,10 +31,12 @@ string ltos(long long lInput)
 	return (string)temp;
 }
 
-string itos(int lInput)
+// char转字符串
+string ctos(char c)
 {
-	char temp[tempstrLen];
-	sprintf_s(temp, tempstrLen, "%05d", lInput);
+	char temp[2];
+	temp[0] = c;
+	temp[1] = 0;
 	return (string)temp;
 }
 
@@ -50,9 +45,9 @@ long long dtol(double input)
 {
 	long long result = 0;
 	if (input>0)
-		result = (long long)(input * 100 + 0.5);
+		result = (long long)(input*100+0.5);
 	else
-		result = (long long)(input * 100 - 0.5);
+		result = (long long)(input*100-0.5);
 	return result;
 }
 
@@ -65,6 +60,7 @@ string dtos(double dInput)
 	sprintf_s(temp, tempstrLen, "%.2f", dInput);
 	return (string)temp;
 }
+
 // 获取时间
 string gettime()
 {
