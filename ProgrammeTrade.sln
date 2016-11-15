@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InitTradingDays", "InitTrad
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CTPDLL", "CTPDLL\CTPDLL.vcxproj", "{B9743F70-4602-4386-A92E-CC07F60FF36B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimNow", "SimNow\SimNow.csproj", "{2895199B-4698-45BD-AA15-D233D165565A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -59,6 +61,16 @@ Global
 		{B9743F70-4602-4386-A92E-CC07F60FF36B}.Release|Win32.ActiveCfg = Release|Win32
 		{B9743F70-4602-4386-A92E-CC07F60FF36B}.Release|Win32.Build.0 = Release|Win32
 		{B9743F70-4602-4386-A92E-CC07F60FF36B}.Release|x86.ActiveCfg = Release|Win32
+		{2895199B-4698-45BD-AA15-D233D165565A}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{2895199B-4698-45BD-AA15-D233D165565A}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{2895199B-4698-45BD-AA15-D233D165565A}.Debug|Win32.ActiveCfg = Debug|x86
+		{2895199B-4698-45BD-AA15-D233D165565A}.Debug|x86.ActiveCfg = Debug|x86
+		{2895199B-4698-45BD-AA15-D233D165565A}.Debug|x86.Build.0 = Debug|x86
+		{2895199B-4698-45BD-AA15-D233D165565A}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{2895199B-4698-45BD-AA15-D233D165565A}.Release|Mixed Platforms.Build.0 = Release|x86
+		{2895199B-4698-45BD-AA15-D233D165565A}.Release|Win32.ActiveCfg = Release|x86
+		{2895199B-4698-45BD-AA15-D233D165565A}.Release|x86.ActiveCfg = Release|x86
+		{2895199B-4698-45BD-AA15-D233D165565A}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

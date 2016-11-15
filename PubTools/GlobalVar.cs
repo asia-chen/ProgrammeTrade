@@ -10,6 +10,11 @@ namespace PubTools
 {
     public class GlobalVar
     {
+        public delegate void TradeCallBack(String[] resStr, int nRequestID);
+
+        
+
+
         // 配置文件内容
         public static PubTools.AppConfig appConfig = null;
         public static DataSet ds = null;
