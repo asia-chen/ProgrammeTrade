@@ -7,7 +7,7 @@ using System.Data;
 
 namespace PubTools.data
 {
-    public class Order
+    public class Order : IComparable, ICloneable 
     {
         ///经纪公司代码
         String BrokerID;
@@ -16,7 +16,7 @@ namespace PubTools.data
         ///合约代码
         String InstrumentID;
         ///报单引用
-        String OrderRef;
+        public String OrderRef;
         ///用户代码
         String UserID;
         ///报单价格条件
@@ -74,7 +74,7 @@ namespace PubTools.data
         ///结算编号
         long SettlementID;
         ///报单编号
-        String OrderSysID;
+        public String OrderSysID;
         ///报单来源
         String OrderSource;
         ///报单状态
@@ -123,6 +123,17 @@ namespace PubTools.data
         long ZCETotalTradedVolume;
         ///互换单标志
         long IsSwapOrder;
+
+        // 排序使用
+        public int CompareTo(Object o)
+        {
+            return this.OrderSysID.CompareTo(((Order)o).OrderSysID);
+        }
+        // 复制使用
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
 
         public void SetData(String[] resStr,int offset)
         {
@@ -242,9 +253,18 @@ namespace PubTools.data
             ///互换单标志
             IsSwapOrder = long.Parse(resStr[pos + 56]);
 
+            Console.WriteLine("InsertTime:" + InsertTime + " LimitPrice:" + LimitPrice.ToString() 
+                + " OrderStatus:" + OrderStatus
+                + " CombOffsetFlag:" + CombOffsetFlag
+                + " CombHedgeFlag:" + CombHedgeFlag
+                + " StatusMsg:" + StatusMsg 
+                + " OrderLocalID:" + OrderLocalID                 
+                + " OrderSysID is: " + OrderSysID
+                );
+
             if (!this.OrderSysID.Equals(""))
             {
-                AddToDatatable();
+                // AddToDatatable();
             }
         }
 

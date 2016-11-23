@@ -12,7 +12,7 @@ namespace InitTradingDays
         static void Main(string[] args)
         {
             DateTime dt = DateTime.ParseExact("20160801", "yyyyMMdd", System.Globalization.CultureInfo.CurrentCulture);
-            GlobalVar.Init();
+            GlobalVar.Init4Data();
             GlobalVar.mysqltool.Connect();
 
             for (int i = 0; i < 3650; i++)

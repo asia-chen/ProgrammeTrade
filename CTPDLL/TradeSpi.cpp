@@ -66,6 +66,12 @@ void CMdSpi::OnFrontConnected()
 void CTradeSpi::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
 	string result = "";
+	if(IsErrorRspInfo(pRspInfo))
+	{
+		result = result + ltos(pRspInfo->ErrorID) + splitstr + (string)pRspInfo->ErrorMsg;
+		TradeResponse((char *)result.c_str(), nRequestID, -1, m_indicator);
+		return ;
+	}
 	
 	result = result + ltos(nRequestID);
 	result = result + splitstr + "sys";
@@ -714,31 +720,37 @@ int CTradeSpi::ReqOrderInsert(vector<string> v, int nRequestID)
 	strcpy_s(inputOrder.InvestorID, sizeof(TThostFtdcInstrumentIDType), (char *)v[4].c_str());
 	///合约代码
 	strcpy_s(inputOrder.InstrumentID, sizeof(TThostFtdcInstrumentIDType), (char *)v[6].c_str());
-	///报单引用
-	strcpy_s(inputOrder.OrderRef, sizeof(TThostFtdcOrderRefType), (char *)v[6].c_str());
+	///报单引用：记录localID
+	strcpy_s(inputOrder.OrderRef, sizeof(TThostFtdcOrderRefType), (char *)v[11].c_str());
 	///用户代码 ??
 	strcpy_s(inputOrder.UserID, sizeof(TThostFtdcUserIDType), (char *)v[4].c_str());
 	///报单价格条件
 	inputOrder.OrderPriceType = THOST_FTDC_OPT_LimitPrice;
-	///买卖方向： 0 买 1 卖
+	///买卖方向： 0 买 1 卖 THOST_FTDC_D_Buy
 	inputOrder.Direction = ((char *)v[7].c_str())[0];
 	///组合开平标志 ??      开仓 '0', 平仓 '1', 强平 '2', 平今 '3', 平昨 '4', 强减 '5', 本地强平 '6'
 	inputOrder.CombOffsetFlag[0] = ((char *)v[8].c_str())[0];
 
-	///组合投机套保标志 ?? 套保 '1', 套利 '2',          投机 '3' 
-	inputOrder.CombHedgeFlag[0] = THOST_FTDC_ECIDT_Speculation;
+	///组合投机套保标志 ?? 套保 '1'             , 套利 '2',投机 '3' 
+	/// 特别说明：
+	///      上海无套利单，正常应该用 投机
+	///      自行区分平今平昨（若服务器端持仓不足，似乎不反馈错误或通过其他函数返回）
+	///      套保单需单独申请，模拟环节可能未限制，实际环境可能被禁止
+	///      注：使用Q7下的单，均为套保。郑州不区分平今、平昨，上海需区分，但不知从哪返回错误。
+	/// 开仓时若使用投机选项，平仓时会如何，待验证
+	inputOrder.CombHedgeFlag[0] = THOST_FTDC_ECIDT_Hedge;
 	///价格
-	inputOrder.LimitPrice = atof((char *)v[4].c_str());
+	inputOrder.LimitPrice = atof((char *)v[9].c_str());
 	///数量
-	inputOrder.VolumeTotalOriginal = atoi((char *)v[4].c_str());
+	inputOrder.VolumeTotalOriginal = atoi((char *)v[10].c_str());
 	///有效期类型
 	inputOrder.TimeCondition = THOST_FTDC_TC_GFD;
 	///GTD日期
-	strcpy_s(inputOrder.GTDDate, sizeof(TThostFtdcDateType), TradingDay);
+	strcpy_s(inputOrder.GTDDate, sizeof(TThostFtdcDateType), "");
 	///成交量类型
 	inputOrder.VolumeCondition = THOST_FTDC_VC_AV;
 	///最小成交量 ??
-	inputOrder.MinVolume  = 1;
+	inputOrder.MinVolume  = 0;
 	///触发条件
 	inputOrder.ContingentCondition = THOST_FTDC_CC_Immediately;
 	///止损价 ??
@@ -747,14 +759,6 @@ int CTradeSpi::ReqOrderInsert(vector<string> v, int nRequestID)
 	inputOrder.ForceCloseReason  = THOST_FTDC_FCC_NotForceClose;
 	///自动挂起标志 ?? 
 	inputOrder.IsAutoSuspend  = 0;
-	///业务单元 ?? 
-	// strcpy_s(inputOrder.BusinessUnit, TThostFtdcBusinessUnitType	
-	///请求编号 ??
-	// strcpy_s(inputOrder.RequestID, TThostFtdcRequestIDType	
-	///用户强评标志 ?? 
-	// strcpy_s(inputOrder.UserForceClose, TThostFtdcBoolType	
-	///互换单标志 ?? 
-	// strcpy_s(inputOrder.IsSwapOrder, TThostFtdcBoolType	
 
 	return m_pTradeApi->ReqOrderInsert(&inputOrder, nRequestID);
 }
@@ -887,4 +891,7 @@ void CTradeSpi::OnRtnOrder(CThostFtdcOrderField *pOrder)
 	TradeResponse((char *)result.c_str(), -1, 1, m_indicator);
 }
 
-
+void CTradeSpi::OnRspOrderInsert(CThostFtdcInputOrderField *pInputOrder, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
+{
+	string result = "";
+}

@@ -32,6 +32,9 @@ namespace PubTools.data
         private long requestID = 0;
         private CtpAPI ctpApi;
 
+        // 报单本地编号
+        private long localOrderID = 0;
+        
         /// 业务数据
         /// 资金
         private Account account = null;
@@ -79,7 +82,7 @@ namespace PubTools.data
             }
             if (resStr[1].Equals("sys") && resStr[2].Equals("login"))
             {
-                onLogin();
+                onLogin(resStr);
                 return;
             }
             if (resStr[1].Equals("sys") && resStr[2].Equals("OnRtnOrder"))
@@ -113,61 +116,17 @@ namespace PubTools.data
             }*/
         }
 
-        // 登录流程
-        public void LoginProgress()
-        {
-            /*connectMsg = "等待连接 . . .";
-
-            int count = 0;
-            while (!isConnected && count < Const.TimeoutCount)
-            {
-                Thread.Sleep(Const.TimeoutEachLen);
-                count++;
-            }
-            if (!isConnected)
-            {
-                connectMsg = "等待连接超时";
-                return;
-            }
-
-            connectMsg = "请求登录 . . .";
-            count = 0;
-            this.ReqLogin();
-
-            while (!isLogin && count < Const.TimeoutCount)
-            {
-                Thread.Sleep(Const.TimeoutEachLen);
-                count++;
-            }
-            if (!isLogin)
-            {
-                connectMsg = "登录超时";
-                return;
-            }
-            connectMsg = "已登录";
-
-            // 主动查询资金、持仓
-            // this.ReqQryAccount();
-            // this.ReqQryPosition();
-            return;*/
-        }
-
-        /// <summary>
-        /// 系统已连接
-        /// </summary> 
-        public void onConnected()
+        // -----------------------------------------------------------
+        /// <summary>系统已连接</summary> 
+        private void onConnected()
         {
             currStatus = 1;
         }
 
         // -----------------------------------------------------------
-        // 主动请求数据
-
-        /// <summary>
-        /// 请求登录
-        /// </summary>
+        /// <summary>请求登录</summary>
         /// <returns>0 成功发出请求；-1 未连接；-2 已登录；-3 未初始化CTP；-4 参数错误</returns>
-         public int ReqLogin()
+        public int ReqLogin()
         {
             if (currStatus < 1)
                 return -1;
@@ -195,14 +154,20 @@ namespace PubTools.data
         /// <summary>
         /// 登录请求返回
         /// </summary>
-        public void onLogin()
+        private void onLogin(String[] resStr)
         {
-            currStatus = 2;
+            if (resStr[3].Equals("0"))
+            {
+                currStatus = 2;
+                return;
+            }
+
             currStatus = 3;
+            connectMsg = resStr[4];
         }
 
         // -------------------------------------------------------------------------------
-        // 查询资金
+        /// <summary>请求查询资金</summary>
         public int ReqQryAccount()
         {
             if (this.ctpApi == null)
@@ -224,8 +189,8 @@ namespace PubTools.data
             this.ctpApi.tradeSendRequest(para);
             return 0;
         }
-
-        public int onReqQryAccount(String[] resStr)
+        /// <summary>查询资金返回</summary>
+        private int onReqQryAccount(String[] resStr)
         {
             if (this.account == null)
             {
@@ -237,7 +202,7 @@ namespace PubTools.data
         }
 
         // --------------------------------------------------------------------------------
-        // 查询持仓
+        /// <summary>查询持仓</summary>
         public int ReqQryPosition()
         {
             if (this.ctpApi == null)
@@ -257,8 +222,8 @@ namespace PubTools.data
             this.ctpApi.tradeSendRequest(para);
             return 0;
         }
-
-        public int onReqQryPosition(String[] resStr)
+        /// <summary>查询持仓返回</summary>
+        private int onReqQryPosition(String[] resStr)
         {
             if (this.position == null)
             {
@@ -281,21 +246,79 @@ namespace PubTools.data
         }
 
         // --------------------------------------------------------------------------------
-        // 报单返回
-        public int onRtnOrder(String[] resStr)
+        /// <summary>请求报单</summary>
+        /// <param name="instrumentID">合约</param>
+        /// <param name="direction">买卖方向</param>
+        /// <param name="offsetFlag">开平</param>
+        /// <param name="price">价格</param>
+        /// <param name="volume">数量</param>
+        public int ReqOrderInsert(String instrumentID, String direction, String offsetFlag, double price, long volume)
+        {
+            String[] para = new String[12];
+
+            para[0] = requestID.ToString();
+            requestID++;
+
+            para[1] = "Order";
+            para[2] = "insert";
+            para[3] = this.brokerID.Trim();
+            para[4] = this.userID.Trim();
+            para[5] = "";
+
+            para[6] = instrumentID;
+            para[7] = direction;
+            para[8] = offsetFlag;
+            para[9] = price.ToString();
+            para[10] = volume.ToString();
+            para[11] = localOrderID.ToString();
+            localOrderID++;
+
+            this.ctpApi.tradeSendRequest(para);
+            Console.WriteLine("Send an Order:" + localOrderID.ToString());
+            return 0;
+        }
+
+        /// <summary>报单返回</summary>
+        private int onRtnOrder(String[] resStr)
         {
             Order thisorder = new Order();
             thisorder.SetData(resStr, 0);
-            this.order.Add(thisorder);
+
+            // TODO: 对于拒绝的报单，如何展示、存储，需完善
+            if (thisorder.OrderRef != null && !thisorder.OrderRef.Equals(""))
+            {
+                // 登录后重传各个报单，确保本地委托编号唯一（若订阅私有流不是重传模式，此处需调整）
+                long tmpOrderID = long.Parse(thisorder.OrderRef);
+                if (tmpOrderID >= localOrderID)
+                    localOrderID = tmpOrderID + 1;
+
+                // 当前列表中是否已包含该报单，存在则更新，否则则添加
+                Order existOrder = this.order.Find(
+                delegate(Order order)
+                {
+                    return order.OrderSysID.Equals(thisorder.OrderSysID);
+                });
+
+                if (existOrder == null)
+                {
+                    this.order.Add(thisorder);
+                }
+                else
+                {
+                    // TODO 是否可行，待验证？？
+                    existOrder = (Order)thisorder.Clone();
+                }
+            }
+
             return 0;
         }
 
         // --------------------------------------------------------------------------------
         // 成交返回
-        public int onRtnTrade(String[] resStr)
+        private int onRtnTrade(String[] resStr)
         {
             Trade thistrade = new Trade();
-            thistrade.SetData(resStr, 0);
+            thistrade.SetData(resStr, 0);            
             this.trade.Add(thistrade);
             return 0;
         }

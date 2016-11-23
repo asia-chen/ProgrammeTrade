@@ -12,7 +12,6 @@ namespace PubTools
     {
         public delegate void TradeCallBack(String[] resStr, int nRequestID);
 
-        
 
 
         // 配置文件内容
@@ -20,8 +19,10 @@ namespace PubTools
         public static DataSet ds = null;
         public static MySqlTool mysqltool = null;
 
-        // 初始化
-        public static void Init()
+        /// <summary>
+        /// 数据处理初始化
+        /// </summary>
+         public static void Init4Data()
         {
             appConfig = new AppConfig();
             mysqltool = new MySqlTool();
@@ -55,6 +56,14 @@ namespace PubTools
             mysqltool.DisConnect();
         }
 
+         /// <summary>
+         /// 交易初始化
+         /// </summary>
+         public static void Init4Trade()
+         {
+             // 初始化本地表，并读入基础数据
+             ds = new DataSet();
 
+         }
     }
 }

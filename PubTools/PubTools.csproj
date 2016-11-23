@@ -41,7 +41,13 @@
     <Compile Include="AppConfig.cs" />
     <Compile Include="CommonTool.cs" />
     <Compile Include="Const.cs" />
+    <Compile Include="CtpAPI.cs" />
     <Compile Include="DataTool.cs" />
+    <Compile Include="data\Account.cs" />
+    <Compile Include="data\Order.cs" />
+    <Compile Include="data\UserPosition.cs" />
+    <Compile Include="data\Trade.cs" />
+    <Compile Include="data\TradeUser.cs" />
     <Compile Include="FormTool.cs" />
     <Compile Include="GlobalVar.cs" />
     <Compile Include="MDDataMerge.cs" />
@@ -84,6 +90,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files (x86)\DevExpress 14.2\Components\Bin\Framework\DevExpress.XtraEditors.v14.2.dll</HintPath>
     </Reference>
+    <Reference Include="DevExpress.XtraGrid.v14.2, Version=14.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.XtraPrinting.v14.2, Version=14.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files (x86)\DevExpress 14.2\Components\Bin\Framework\DevExpress.XtraPrinting.v14.2.dll</HintPath>

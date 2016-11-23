@@ -62,6 +62,12 @@ int TradeInitAPI(char *server_addr, CallbackDelegate callback, char* tradeUser)
 	tradeApis[indicator] = CThostFtdcTraderApi::CreateFtdcTraderApi("");
 	tradeSpis[indicator] = new CTradeSpi(tradeApis[indicator], indicator);
 
+	// 公共流，全部传输
+	// TODO 暂未知哪些数据
+	tradeApis[indicator]->SubscribePublicTopic(THOST_TERT_RESTART);
+	// 私有流：从登录后传输
+	// tradeApis[indicator]->SubscribePrivateTopic(THOST_TERT_QUICK);
+
 	tradeApis[indicator]->RegisterSpi(tradeSpis[indicator]);
 	tradeApis[indicator]->RegisterFront(server_addr);
 	tradeApis[indicator]->Init();

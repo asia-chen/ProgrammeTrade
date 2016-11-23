@@ -8,6 +8,7 @@ namespace PubTools
     public class Const
     {
         public const int SleepTime = 100;
+        public const int TimeOutCount = 60;
 
         public const String ExgSH = "shfe";
         public const String ExgDL = "dce";

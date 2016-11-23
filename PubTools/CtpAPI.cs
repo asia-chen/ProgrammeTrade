@@ -19,7 +19,7 @@ namespace PubTools
 
         // 请求列表
         private Dictionary<string, string[]> reqList;
-        // 
+        // 各请求返回记录数
         private Dictionary<string, int> countList;
         // 返回结果列表
         private Dictionary<string, string[]> resList;
@@ -153,10 +153,8 @@ namespace PubTools
             {
             }
 
+            // Console.WriteLine("callBack: " + resStr[0] + " " + resStr[1] + " " + resStr[2]);
             tradeCallBack(resStr, nRequestID);
-
-
-            
         }
 
         /// <summary>将string[]格式的参数数组 合并成用分割符分割的string</summary>

@@ -41,6 +41,7 @@ class CTradeSpi : public CThostFtdcTraderSpi
 
 	// ±®µ•«Î«Û
 	virtual int ReqOrderInsert(vector<string> v, int nRequestID);
+	virtual void OnRspOrderInsert(CThostFtdcInputOrderField *pInputOrder, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 	virtual void OnRtnOrder(CThostFtdcOrderField *pOrder);
 
 

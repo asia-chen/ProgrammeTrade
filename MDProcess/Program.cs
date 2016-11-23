@@ -15,7 +15,7 @@ namespace MDProcess
         [STAThread]
         static void Main()
         {
-            PubTools.GlobalVar.Init();
+            PubTools.GlobalVar.Init4Data();
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
