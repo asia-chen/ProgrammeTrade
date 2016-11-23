@@ -14,7 +14,7 @@ namespace PubTools.data
         ///投资者代码
         String InvestorID;
         ///合约代码
-        String InstrumentID;
+        public String InstrumentID { get; set; }
         ///报单引用
         String OrderRef;
         ///用户代码
@@ -22,11 +22,11 @@ namespace PubTools.data
         ///交易所代码
         String ExchangeID;
         ///成交编号
-        String TradeID;
+        public String TradeID { get; set; }
         ///买卖方向
-        String Direction;
+        public String Direction { get; set; }
         ///报单编号
-        String OrderSysID;
+        public String OrderSysID { get; set; }
         ///会员代码
         String ParticipantID;
         ///客户代码
@@ -36,17 +36,17 @@ namespace PubTools.data
         ///合约在交易所的代码
         String ExchangeInstID;
         ///开平标志
-        String OffsetFlag;
+        public String OffsetFlag { get; set; }
         ///投机套保标志
         String HedgeFlag;
         ///价格
-        double Price;
+        public double Price { get; set; }
         ///数量
-        long Volume;
+        public long Volume { get; set; }
         ///成交时期
-        String TradeDate;
+        public String TradeDate { get; set; }
         ///成交时间
-        String TradeTime;
+        public String TradeTime { get; set; }
         ///成交类型
         String TradeType;
         ///成交价来源
@@ -62,7 +62,7 @@ namespace PubTools.data
         ///序号
         long SequenceNo;
         ///交易日
-        String TradingDay;
+        public String TradingDay { get; set; }
         ///结算编号
         long SettlementID;
         ///经纪公司报单编号

@@ -22,6 +22,7 @@ namespace SimNow
         //    第三组：Trade Front：218.202.237.33 :10002，Market Front：218.202.237.33 :10012；【移动】
         //CTPMini1：
         //    第一组：Trade Front：180.168.146.187:10003，Market Front：180.168.146.187:10013；【电信】
+
         TradeUser myuser = null;
 
         public FormMain()
@@ -57,22 +58,9 @@ namespace SimNow
             this.rbBuy.Checked = true;
             this.rbOpen.Checked = true;
 
-            Thread.Sleep(1000);
-            //myuser.ReqOrderInsert("hc1701", "0", "0", 3199, 1);
-            myuser.ReqOrderInsert("hc1701", "0", "1", 3299, 1);
-            /*myuser.ReqOrderInsert("hc1701", "0", "2", 3199, 1);
-            myuser.ReqOrderInsert("hc1701", "0", "3", 3199, 1);
-            myuser.ReqOrderInsert("hc1701", "0", "4", 3199, 1);
-            myuser.ReqOrderInsert("hc1701", "0", "5", 3199, 1);
-            myuser.ReqOrderInsert("hc1701", "0", "6", 3199, 1);
+            gcOrder.DataSource = myuser.order;
+            gcTrade.DataSource = myuser.trade;
 
-            myuser.ReqOrderInsert("hc1701", "1", "0", 3199, 1);
-            myuser.ReqOrderInsert("hc1701", "1", "1", 3199, 1);
-            myuser.ReqOrderInsert("hc1701", "1", "2", 3199, 1);
-            myuser.ReqOrderInsert("hc1701", "1", "3", 3199, 1);
-            myuser.ReqOrderInsert("hc1701", "1", "4", 3199, 1);
-            myuser.ReqOrderInsert("hc1701", "1", "5", 3199, 1);
-            myuser.ReqOrderInsert("hc1701", "1", "6", 3199, 1); */
         }
 
         private void bOrder_Click(object sender, EventArgs e)

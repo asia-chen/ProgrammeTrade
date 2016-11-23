@@ -14,7 +14,7 @@ namespace PubTools.data
         ///投资者代码
         String InvestorID;
         ///合约代码
-        String InstrumentID;
+        public String InstrumentID { get; set; }
         ///报单引用
         public String OrderRef;
         ///用户代码
@@ -22,15 +22,15 @@ namespace PubTools.data
         ///报单价格条件
         String OrderPriceType;
         ///买卖方向
-        String Direction;
+        public String Direction { get; set; }
         ///组合开平标志
-        String CombOffsetFlag;
+        public String CombOffsetFlag { get; set; }
         ///组合投机套保标志
         String CombHedgeFlag;
         ///价格
-        double LimitPrice;
+        public double LimitPrice { get; set; }
         ///数量
-        long VolumeTotalOriginal;
+        public long VolumeTotalOriginal { get; set; }
         ///有效期类型
         String TimeCondition;
         ///GTD日期
@@ -66,19 +66,19 @@ namespace PubTools.data
         ///安装编号
         long InstallID;
         ///报单提交状态
-        String OrderSubmitStatus;
+        public String OrderSubmitStatus { get; set; }
         ///报单提示序号
         long NotifySequence;
         ///交易日
-        String TradingDay;
+        public String TradingDay { get; set; }
         ///结算编号
         long SettlementID;
         ///报单编号
-        public String OrderSysID;
+        public String OrderSysID { get; set; }
         ///报单来源
         String OrderSource;
         ///报单状态
-        String OrderStatus;
+        public String OrderStatus { get; set; }
         ///报单类型
         String OrderType;
         ///今成交数量
@@ -88,7 +88,7 @@ namespace PubTools.data
         ///报单日期
         String InsertDate;
         ///委托时间
-        String InsertTime;
+        public String InsertTime { get; set; }
         ///激活时间
         String ActiveTime;
         ///挂起时间
@@ -96,7 +96,7 @@ namespace PubTools.data
         ///最后修改时间
         String UpdateTime;
         ///撤销时间
-        String CancelTime;
+        public String CancelTime { get; set; }
         ///最后修改交易所交易员代码
         String ActiveTraderID;
         ///结算会员编号
@@ -110,7 +110,7 @@ namespace PubTools.data
         ///用户端产品信息
         String UserProductInfo;
         ///状态信息
-        String StatusMsg;
+        public String StatusMsg;
         ///用户强评标志
         String UserForceClose;
         ///操作用户代码

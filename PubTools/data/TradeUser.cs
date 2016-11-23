@@ -37,13 +37,13 @@ namespace PubTools.data
         
         /// 业务数据
         /// 资金
-        private Account account = null;
+        public Account account { get; set; }
         /// 报单
-        private List<Order> order = null;
+        public List<Order> order { get; set; }
         /// 成交
-        private List<Trade> trade = null;
+        public List<Trade> trade { get; set; }
         /// 持仓
-        private List<UserPosition> position = null;
+        public List<UserPosition> position { get; set; }
 
         /// <summary>
         /// 构造函数，初始化变量及CTP连接
