@@ -62,6 +62,8 @@
             this.gridColumn5 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridColumn6 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridColumn7 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.gridColumn16 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.gridColumn18 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gcTrade = new DevExpress.XtraGrid.GridControl();
             this.gvTrade = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.gridColumn17 = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -72,6 +74,13 @@
             this.gridColumn13 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridColumn14 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridColumn15 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.statusStrip = new System.Windows.Forms.StatusStrip();
+            this.statusLabelLeft = new System.Windows.Forms.ToolStripStatusLabel();
+            this.statusLabelCenter = new System.Windows.Forms.ToolStripStatusLabel();
+            this.statusLabelRight = new System.Windows.Forms.ToolStripStatusLabel();
+            this.rstOrder = new DevExpress.Data.RealTimeSource();
+            this.rtsTrade = new DevExpress.Data.RealTimeSource();
+            this.gridColumn19 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -80,6 +89,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.gvOrder)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gcTrade)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gvTrade)).BeginInit();
+            this.statusStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // tbUsername
@@ -345,7 +355,10 @@
             this.gridColumn4,
             this.gridColumn5,
             this.gridColumn6,
-            this.gridColumn7});
+            this.gridColumn7,
+            this.gridColumn16,
+            this.gridColumn18,
+            this.gridColumn19});
             this.gvOrder.GridControl = this.gcOrder;
             this.gvOrder.Name = "gvOrder";
             this.gvOrder.OptionsBehavior.AllowAddRows = DevExpress.Utils.DefaultBoolean.False;
@@ -363,14 +376,17 @@
             this.gvOrder.OptionsView.ShowGroupExpandCollapseButtons = false;
             this.gvOrder.OptionsView.ShowGroupPanel = false;
             this.gvOrder.OptionsView.ShowIndicator = false;
+            this.gvOrder.DoubleClick += new System.EventHandler(this.gvOrder_DoubleClick);
             // 
             // gridColumn1
             // 
             this.gridColumn1.Caption = "报单号";
             this.gridColumn1.FieldName = "OrderSysID";
+            this.gridColumn1.MinWidth = 30;
             this.gridColumn1.Name = "gridColumn1";
             this.gridColumn1.Visible = true;
             this.gridColumn1.VisibleIndex = 0;
+            this.gridColumn1.Width = 248;
             // 
             // gridColumn2
             // 
@@ -379,6 +395,7 @@
             this.gridColumn2.Name = "gridColumn2";
             this.gridColumn2.Visible = true;
             this.gridColumn2.VisibleIndex = 2;
+            this.gridColumn2.Width = 159;
             // 
             // gridColumn8
             // 
@@ -387,22 +404,27 @@
             this.gridColumn8.Name = "gridColumn8";
             this.gridColumn8.Visible = true;
             this.gridColumn8.VisibleIndex = 1;
+            this.gridColumn8.Width = 212;
             // 
             // gridColumn3
             // 
             this.gridColumn3.Caption = "买卖";
             this.gridColumn3.FieldName = "Direction";
+            this.gridColumn3.MinWidth = 10;
             this.gridColumn3.Name = "gridColumn3";
             this.gridColumn3.Visible = true;
             this.gridColumn3.VisibleIndex = 3;
+            this.gridColumn3.Width = 84;
             // 
             // gridColumn4
             // 
             this.gridColumn4.Caption = "开平";
             this.gridColumn4.FieldName = "CombOffsetFlag";
+            this.gridColumn4.MinWidth = 10;
             this.gridColumn4.Name = "gridColumn4";
             this.gridColumn4.Visible = true;
             this.gridColumn4.VisibleIndex = 4;
+            this.gridColumn4.Width = 79;
             // 
             // gridColumn5
             // 
@@ -411,14 +433,16 @@
             this.gridColumn5.Name = "gridColumn5";
             this.gridColumn5.Visible = true;
             this.gridColumn5.VisibleIndex = 5;
+            this.gridColumn5.Width = 211;
             // 
             // gridColumn6
             // 
-            this.gridColumn6.Caption = "数量";
+            this.gridColumn6.Caption = "总数量";
             this.gridColumn6.FieldName = "VolumeTotalOriginal";
             this.gridColumn6.Name = "gridColumn6";
             this.gridColumn6.Visible = true;
-            this.gridColumn6.VisibleIndex = 6;
+            this.gridColumn6.VisibleIndex = 7;
+            this.gridColumn6.Width = 184;
             // 
             // gridColumn7
             // 
@@ -426,7 +450,26 @@
             this.gridColumn7.FieldName = "OrderStatus";
             this.gridColumn7.Name = "gridColumn7";
             this.gridColumn7.Visible = true;
-            this.gridColumn7.VisibleIndex = 7;
+            this.gridColumn7.VisibleIndex = 6;
+            this.gridColumn7.Width = 147;
+            // 
+            // gridColumn16
+            // 
+            this.gridColumn16.Caption = "已成交";
+            this.gridColumn16.FieldName = "VolumeTraded";
+            this.gridColumn16.Name = "gridColumn16";
+            this.gridColumn16.Visible = true;
+            this.gridColumn16.VisibleIndex = 8;
+            this.gridColumn16.Width = 211;
+            // 
+            // gridColumn18
+            // 
+            this.gridColumn18.Caption = "剩余量";
+            this.gridColumn18.FieldName = "VolumeTotal";
+            this.gridColumn18.Name = "gridColumn18";
+            this.gridColumn18.Visible = true;
+            this.gridColumn18.VisibleIndex = 9;
+            this.gridColumn18.Width = 113;
             // 
             // gcTrade
             // 
@@ -532,11 +575,54 @@
             this.gridColumn15.Visible = true;
             this.gridColumn15.VisibleIndex = 7;
             // 
+            // statusStrip
+            // 
+            this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.statusLabelLeft,
+            this.statusLabelCenter,
+            this.statusLabelRight});
+            this.statusStrip.Location = new System.Drawing.Point(0, 512);
+            this.statusStrip.Name = "statusStrip";
+            this.statusStrip.Size = new System.Drawing.Size(1194, 22);
+            this.statusStrip.TabIndex = 9;
+            // 
+            // statusLabelLeft
+            // 
+            this.statusLabelLeft.Name = "statusLabelLeft";
+            this.statusLabelLeft.Size = new System.Drawing.Size(0, 17);
+            // 
+            // statusLabelCenter
+            // 
+            this.statusLabelCenter.Name = "statusLabelCenter";
+            this.statusLabelCenter.Size = new System.Drawing.Size(0, 17);
+            // 
+            // statusLabelRight
+            // 
+            this.statusLabelRight.Name = "statusLabelRight";
+            this.statusLabelRight.Size = new System.Drawing.Size(0, 17);
+            // 
+            // rstOrder
+            // 
+            this.rstOrder.DisplayableProperties = null;
+            this.rstOrder.UseWeakEventHandler = true;
+            // 
+            // rtsTrade
+            // 
+            this.rtsTrade.DisplayableProperties = null;
+            this.rtsTrade.UseWeakEventHandler = true;
+            // 
+            // gridColumn19
+            // 
+            this.gridColumn19.Caption = "gridColumn19";
+            this.gridColumn19.FieldName = "ExchangeID";
+            this.gridColumn19.Name = "gridColumn19";
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 27F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1194, 534);
+            this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.gcTrade);
             this.Controls.Add(this.gcOrder);
             this.Controls.Add(this.groupBox2);
@@ -559,7 +645,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.gvOrder)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gcTrade)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gvTrade)).EndInit();
+            this.statusStrip.ResumeLayout(false);
+            this.statusStrip.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -608,6 +697,15 @@
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn14;
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn15;
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn17;
+        private System.Windows.Forms.StatusStrip statusStrip;
+        private System.Windows.Forms.ToolStripStatusLabel statusLabelLeft;
+        private System.Windows.Forms.ToolStripStatusLabel statusLabelCenter;
+        private System.Windows.Forms.ToolStripStatusLabel statusLabelRight;
+        private DevExpress.Data.RealTimeSource rstOrder;
+        private DevExpress.Data.RealTimeSource rtsTrade;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn16;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn18;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn19;
     }
 }
 

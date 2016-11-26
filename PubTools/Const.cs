@@ -14,5 +14,12 @@ namespace PubTools
         public const String ExgDL = "dce";
         public const String ExgZZ = "czce";
         public const String ExgJR = "cffex";
+
+        public const String TradeBuy = "0";
+        public const String TradeSell = "1";
+
+        public const String TradeOpen = "0";
+        public const String TradeCloseToday = "3";
+        public const String TradeClose = "4";
     }
 }

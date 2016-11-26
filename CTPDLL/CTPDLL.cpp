@@ -166,8 +166,6 @@ int TradeSendRequest(char *req)
 			strcpy_s(pReqUserLoginField.InterfaceProductInfo, sizeof(TThostFtdcProductInfoType), "THOST User");
 
 			result =  pMdApi->ReqUserLogin(&pReqUserLoginField, 1);
-
-
 		}
 		else if (requesttype == "disconnected")
 		{
@@ -234,6 +232,10 @@ int TradeSendRequest(char *req)
 			else if (requesttype == "logout")
 			{
 			}
+			else if (requesttype == "ReqSettlementInfoConfirm")
+			{
+				result = spi_ptr->ReqSettlementInfoConfirm(v, nRequestID);
+			}
 		}
 		else if (modulename == "Query")
 		{
@@ -270,7 +272,7 @@ int TradeSendRequest(char *req)
 			}
 			else if (requesttype == "action") // ³·µ¥
 			{
-				result = spi_ptr->ReqQryTrade((char *)v[3].c_str(), (char *)v[4].c_str(), nRequestID);
+				result = spi_ptr->ReqOrderAction(v, nRequestID);
 			}
 		}
 		return result;

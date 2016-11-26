@@ -19,6 +19,10 @@ class CTradeSpi : public CThostFtdcTraderSpi
 	virtual void OnFrontDisconnected(int nReason);
 	virtual void OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 	
+	// 确认结算结果
+	virtual int ReqSettlementInfoConfirm(vector<string> v, int nRequestID);
+	virtual void OnRspSettlementInfoConfirm(CThostFtdcSettlementInfoConfirmField *pSettlementInfoConfirm, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+
 	// 查询资金
 	virtual int ReqQryTradingAccount(char *brokerID, char *userID, int nRequestID);
 	virtual void OnRspQryTradingAccount(CThostFtdcTradingAccountField *pTradingAccount, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
@@ -44,6 +48,9 @@ class CTradeSpi : public CThostFtdcTraderSpi
 	virtual void OnRspOrderInsert(CThostFtdcInputOrderField *pInputOrder, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 	virtual void OnRtnOrder(CThostFtdcOrderField *pOrder);
 
+	// 撤单请求
+	virtual int ReqOrderAction(vector<string> v, int nRequestID);
+	virtual void OnRspOrderAction(CThostFtdcInputOrderActionField *pInputOrderAction, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
 	private:
 	CThostFtdcTraderApi *m_pTradeApi;

@@ -34,6 +34,10 @@ namespace SimNow
         {
             this.bLogin.Enabled = true;
             this.bOrder.Enabled = false;
+
+            GlobalVar.currForm = this;
+            FormTool.setStatusMessage = this.setStatusImpl;
+            FormTool.setErrMessage = this.setStatusImpl;
         }
 
         private void bLogin_Click(object sender, EventArgs e)
@@ -52,14 +56,20 @@ namespace SimNow
                 return;
             }
 
+            myuser.ReqSettlementInfoConfirm();
+
+
             this.bLogin.Enabled = false;
             this.bOrder.Enabled = true;
 
             this.rbBuy.Checked = true;
             this.rbOpen.Checked = true;
 
-            gcOrder.DataSource = myuser.order;
-            gcTrade.DataSource = myuser.trade;
+            rstOrder.DataSource = myuser.order;
+            gcOrder.DataSource = rstOrder;
+
+            rtsTrade.DataSource = myuser.trade;
+            gcTrade.DataSource = rtsTrade;
 
         }
 
@@ -89,17 +99,53 @@ namespace SimNow
             String BuyOrSell = "";
             String OpenOrClose = "";
             if (this.rbBuy.Checked)
-                BuyOrSell = "0";
+                BuyOrSell = Const.TradeBuy;
             else
-                BuyOrSell = "1";
+                BuyOrSell = Const.TradeSell;
             if (this.rbOpen.Checked)
-                OpenOrClose = "0";
+                OpenOrClose = Const.TradeOpen;
+            else if (this.rbCloseToday.Checked)
+            {
+                OpenOrClose = Const.TradeCloseToday;
+            }
             else
             {
-                OpenOrClose = "1";
+                OpenOrClose = Const.TradeClose;
             }
 
             myuser.ReqOrderInsert(this.tbInstrumentID.Text, BuyOrSell, OpenOrClose, price, volume);
+        }
+
+        /// <summary>/// 显示状态栏信息/// </summary>
+        private void setStatusImpl(String msg)
+        {
+            if (this.statusStrip.InvokeRequired)
+            {
+                this.Invoke(new FormTool.SetFormMessage(setStatusImpl));
+            }
+            else
+            {
+                this.statusLabelLeft.Text = msg;
+            }
+        }
+
+        private void gvOrder_DoubleClick(object sender, EventArgs e)
+        {
+            if (gvOrder.FocusedRowHandle < 0)
+                return;
+
+            String OrderSysID = (string)gvOrder.GetFocusedRowCellValue("OrderSysID");
+            String ExchangeID = (string)gvOrder.GetFocusedRowCellValue("ExchangeID");
+
+            String msg = "是否确定撤销报单" + OrderSysID + "？";
+            DialogResult result = MessageBox.Show(msg, "提示信息", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (result.Equals(DialogResult.No))
+            {
+                return;
+            }
+
+            // 执行撤单
+            myuser.ReqOrderAction(OrderSysID, ExchangeID);
         }
     }
 }

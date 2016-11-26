@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using System.ComponentModel;
+
 namespace PubTools.data
 {
     /// <summary>
@@ -39,11 +41,11 @@ namespace PubTools.data
         /// 资金
         public Account account { get; set; }
         /// 报单
-        public List<Order> order { get; set; }
+        public BindingList<Order> order { get; set; }
         /// 成交
-        public List<Trade> trade { get; set; }
+        public BindingList<Trade> trade { get; set; }
         /// 持仓
-        public List<UserPosition> position { get; set; }
+        public BindingList<UserPosition> position { get; set; }
 
         /// <summary>
         /// 构造函数，初始化变量及CTP连接
@@ -63,9 +65,9 @@ namespace PubTools.data
             this.ctpApi = new CtpAPI(brokerID, userID, tradeAddr, this.tradeCallBack);
             
             account = new Account();
-            order = new List<Order>();
-            trade = new List<Trade>();
-            position = new List<UserPosition>();
+            order = new BindingList<Order>();
+            trade = new BindingList<Trade>();
+            position = new BindingList<UserPosition>();
         }
 
         /// <summary>
@@ -95,6 +97,18 @@ namespace PubTools.data
                 onRtnTrade(resStr);
                 return;
             }
+
+            if (resStr[1].Equals("Order") && resStr[2].Equals("insert"))
+            {
+                onRspOrderInsert(resStr);
+                return;
+            }
+            if (resStr[1].Equals("Order") && resStr[2].Equals("action"))
+            {
+                onRspOrderAction(resStr);
+                return;
+            }
+
             if (resStr[1].Equals("Query") && resStr[2].Equals("account"))
             {
                 onReqQryAccount(resStr);
@@ -159,12 +173,40 @@ namespace PubTools.data
             if (resStr[3].Equals("0"))
             {
                 currStatus = 2;
-                return;
+                connectMsg = "login ok";
+            }
+            else
+            {
+                currStatus = 3;
+                connectMsg = resStr[4];
             }
 
-            currStatus = 3;
-            connectMsg = resStr[4];
+            FormTool.DisplayStatusMessage(connectMsg);
         }
+
+        // -----------------------------------------------------------
+        /// <summary>请求确认结算单</summary>
+        public int ReqSettlementInfoConfirm()
+        {
+            if (currStatus != 2)
+                return -1;
+
+            String[] para = new String[8];
+
+            para[0] = requestID.ToString();
+            requestID++;
+
+            para[1] = "sys";
+            para[2] = "ReqSettlementInfoConfirm";
+            para[3] = this.brokerID.Trim();
+            para[4] = this.userID.Trim();
+            para[6] = DateTime.Now.ToString("yyyyMMdd");
+            para[7] = DateTime.Now.ToString("HH:mm:ss");
+
+            this.ctpApi.tradeSendRequest(para);
+            return 0;
+        }
+
 
         // -------------------------------------------------------------------------------
         /// <summary>请求查询资金</summary>
@@ -227,7 +269,7 @@ namespace PubTools.data
         {
             if (this.position == null)
             {
-                this.position = new List<UserPosition>();
+                this.position = new BindingList<UserPosition>();
             }
 
             this.position.Clear();
@@ -278,35 +320,42 @@ namespace PubTools.data
             return 0;
         }
 
+        /// <summary>报单返回：目前仅处理错误信息</summary>
+        private int onRspOrderInsert(String[] resStr)
+        {
+            FormTool.DisplayErrorMessage(resStr[7]);
+            return 0;
+        }
+
         /// <summary>报单返回</summary>
         private int onRtnOrder(String[] resStr)
         {
-            Order thisorder = new Order();
-            thisorder.SetData(resStr, 0);
-
-            // TODO: 对于拒绝的报单，如何展示、存储，需完善
-            if (thisorder.OrderRef != null && !thisorder.OrderRef.Equals(""))
+            lock (order)
             {
-                // 登录后重传各个报单，确保本地委托编号唯一（若订阅私有流不是重传模式，此处需调整）
-                long tmpOrderID = long.Parse(thisorder.OrderRef);
-                if (tmpOrderID >= localOrderID)
-                    localOrderID = tmpOrderID + 1;
+                Order thisorder = new Order();
+                thisorder.SetData(resStr, 0);
 
-                // 当前列表中是否已包含该报单，存在则更新，否则则添加
-                Order existOrder = this.order.Find(
-                delegate(Order order)
+                // TODO: 对于拒绝的报单，如何展示、存储，需完善
+                if (thisorder.OrderSysID != null && !thisorder.OrderSysID.Trim().Equals(""))
                 {
-                    return order.OrderSysID.Equals(thisorder.OrderSysID);
-                });
+                    // 登录后重传各个报单，确保本地委托编号唯一（若订阅私有流不是重传模式，此处需调整）
+                    long tmpOrderID = long.Parse(thisorder.OrderRef);
+                    if (tmpOrderID >= localOrderID)
+                        localOrderID = tmpOrderID + 1;
 
-                if (existOrder == null)
-                {
+                    // 当前列表中是否已包含该报单，存在则更新，否则则添加
+                    int i = 0;
+                    for (i = 0; i < order.Count; i++)
+                    {
+                        if (order.ElementAt(i).OrderSysID.Equals(thisorder.OrderSysID))
+                            break;
+                    }
+
+                    if (i < order.Count)
+                    {
+                        order.RemoveAt(i);
+                    }
                     this.order.Add(thisorder);
-                }
-                else
-                {
-                    // TODO 是否可行，待验证？？
-                    existOrder = (Order)thisorder.Clone();
                 }
             }
 
@@ -314,11 +363,41 @@ namespace PubTools.data
         }
 
         // --------------------------------------------------------------------------------
+        /// <summary>请求撤单</summary>
+        /// <param name="OrderSysID">报单号</param>
+        public int ReqOrderAction(String OrderSysID, String ExchangeID)
+        {
+            String[] para = new String[8];
+
+            para[0] = requestID.ToString();
+            requestID++;
+
+            para[1] = "Order";
+            para[2] = "action";
+            para[3] = this.brokerID.Trim();
+            para[4] = this.userID.Trim();
+            para[5] = "";
+
+            para[6] = OrderSysID;
+            para[7] = ExchangeID;
+
+            this.ctpApi.tradeSendRequest(para);
+            Console.WriteLine("Send an Order Action:" + OrderSysID);
+            return 0;
+        }
+
+        public int onRspOrderAction(String[] resStr)
+        {
+            FormTool.DisplayErrorMessage(resStr[7]);
+            return 0;
+        }
+        
+        // --------------------------------------------------------------------------------
         // 成交返回
         private int onRtnTrade(String[] resStr)
         {
             Trade thistrade = new Trade();
-            thistrade.SetData(resStr, 0);            
+            thistrade.SetData(resStr, 0);
             this.trade.Add(thistrade);
             return 0;
         }

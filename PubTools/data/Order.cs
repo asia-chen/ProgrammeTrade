@@ -54,7 +54,7 @@ namespace PubTools.data
         ///本地报单编号
         String OrderLocalID;
         ///交易所代码
-        String ExchangeID;
+        public String ExchangeID { get; set; }
         ///会员代码
         String ParticipantID;
         ///客户代码
@@ -82,9 +82,9 @@ namespace PubTools.data
         ///报单类型
         String OrderType;
         ///今成交数量
-        long VolumeTraded;
+        public long VolumeTraded { get; set; }
         ///剩余数量
-        long VolumeTotal;
+        public long VolumeTotal { get; set; }
         ///报单日期
         String InsertDate;
         ///委托时间

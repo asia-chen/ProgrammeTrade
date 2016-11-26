@@ -101,6 +101,30 @@ void CTradeSpi::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThos
 	return ;	
 }
 
+/// 请求确认结算单
+int CTradeSpi::ReqSettlementInfoConfirm(vector<string> v, int nRequestID)
+{
+	CThostFtdcSettlementInfoConfirmField settlementInfoConfirm;
+	memset(&settlementInfoConfirm, 0, sizeof(CThostFtdcSettlementInfoConfirmField));
+	
+	///经纪公司代码
+	strcpy_s(settlementInfoConfirm.BrokerID, sizeof(TThostFtdcBrokerIDType), (char *)v[3].c_str());
+	///投资者代码
+	strcpy_s(settlementInfoConfirm.InvestorID, sizeof(TThostFtdcInvestorIDType), (char *)v[4].c_str());
+	/// 确认日期
+	strcpy_s(settlementInfoConfirm.ConfirmDate, sizeof(TThostFtdcDateType), (char *)v[6].c_str());
+	/// 确认时间
+	strcpy_s(settlementInfoConfirm.ConfirmTime, sizeof(TThostFtdcTimeType), (char *)v[7].c_str());
+
+	int result = m_pTradeApi->ReqSettlementInfoConfirm(&settlementInfoConfirm, nRequestID);
+	return result;
+}
+void CTradeSpi::OnRspSettlementInfoConfirm(CThostFtdcSettlementInfoConfirmField *pSettlementInfoConfirm, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
+{
+	string result = "";
+	return ;
+}
+
 //行情登录
 void CMdSpi::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
@@ -715,9 +739,9 @@ int CTradeSpi::ReqOrderInsert(vector<string> v, int nRequestID)
 	memset(&inputOrder, 0, sizeof(CThostFtdcInputOrderField));
 
 	///经纪公司代码
-	strcpy_s(inputOrder.BrokerID, sizeof(TThostFtdcInstrumentIDType), (char *)v[3].c_str());
+	strcpy_s(inputOrder.BrokerID, sizeof(TThostFtdcBrokerIDType), (char *)v[3].c_str());
 	///投资者代码
-	strcpy_s(inputOrder.InvestorID, sizeof(TThostFtdcInstrumentIDType), (char *)v[4].c_str());
+	strcpy_s(inputOrder.InvestorID, sizeof(TThostFtdcInvestorIDType), (char *)v[4].c_str());
 	///合约代码
 	strcpy_s(inputOrder.InstrumentID, sizeof(TThostFtdcInstrumentIDType), (char *)v[6].c_str());
 	///报单引用：记录localID
@@ -894,4 +918,45 @@ void CTradeSpi::OnRtnOrder(CThostFtdcOrderField *pOrder)
 void CTradeSpi::OnRspOrderInsert(CThostFtdcInputOrderField *pInputOrder, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
 	string result = "";
+
+	if(IsErrorRspInfo(pRspInfo))
+	{
+		result = result + ltos(pRspInfo->ErrorID) + splitstr + (string)pRspInfo->ErrorMsg;
+		TradeResponse((char *)result.c_str(), nRequestID, -1, m_indicator);
+		return ;
+	}
+}
+
+// 请求撤单
+int CTradeSpi::ReqOrderAction(vector<string> v, int nRequestID)
+{
+	CThostFtdcInputOrderActionField inputOrderAction;
+	memset(&inputOrderAction, 0, sizeof(CThostFtdcInputOrderActionField));
+
+	///经纪公司代码
+	strcpy_s(inputOrderAction.BrokerID, sizeof(TThostFtdcBrokerIDType), (char *)v[3].c_str());
+	///投资者代码
+	strcpy_s(inputOrderAction.InvestorID, sizeof(TThostFtdcInvestorIDType), (char *)v[4].c_str());
+	///报单号
+	strcpy_s(inputOrderAction.OrderSysID, sizeof(TThostFtdcOrderSysIDType), (char *)v[6].c_str());
+	///操作标志
+	inputOrderAction.ActionFlag = THOST_FTDC_AF_Delete;
+	///用户代码
+	strcpy_s(inputOrderAction.UserID, sizeof(TThostFtdcUserIDType), (char *)v[4].c_str());
+	///交易所代码
+	strcpy_s(inputOrderAction.ExchangeID, sizeof(TThostFtdcExchangeIDType), (char *)v[7].c_str());
+
+	return m_pTradeApi->ReqOrderAction(&inputOrderAction, nRequestID);
+}
+
+void CTradeSpi::OnRspOrderAction(CThostFtdcInputOrderActionField *pInputOrderAction, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
+{
+	string result = "";
+
+	if(IsErrorRspInfo(pRspInfo))
+	{
+		result = result + ltos(pRspInfo->ErrorID) + splitstr + (string)pRspInfo->ErrorMsg;
+		TradeResponse((char *)result.c_str(), nRequestID, -1, m_indicator);
+		return ;
+	}
 }

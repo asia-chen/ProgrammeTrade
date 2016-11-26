@@ -86,5 +86,30 @@ namespace PubTools
             }
         }
 
+        /// <summary>后台线程在窗体内显示信息</summary>
+        /// <param name="msg">待显示内容</param> 
+        public delegate void SetFormMessage(String msg);
+
+        /// <summary>显示状态栏</summary>
+        public static SetFormMessage setStatusMessage = null;
+        public static void DisplayStatusMessage(String msg)
+        {
+            if (FormTool.setStatusMessage != null && GlobalVar.currForm != null)
+            {
+                GlobalVar.currForm.Invoke(FormTool.setStatusMessage, msg);
+            }
+        }
+
+        /// <summary>显示错误信息</summary>
+        public static SetFormMessage setErrMessage = null;
+        public static void DisplayErrorMessage(String msg)
+        {
+            if (FormTool.setErrMessage != null && GlobalVar.currForm != null)
+            {
+                GlobalVar.currForm.Invoke(FormTool.setErrMessage, msg);
+            }
+        }
+
+
     }
 }
