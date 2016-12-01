@@ -10,6 +10,8 @@ namespace PubTools
         public const int SleepTime = 100;
         public const int TimeOutCount = 60;
 
+        public const String splitstr = "><";
+
         public const String ExgSH = "shfe";
         public const String ExgDL = "dce";
         public const String ExgZZ = "czce";

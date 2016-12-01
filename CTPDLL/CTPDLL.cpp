@@ -11,9 +11,8 @@
 #include <vector>
 using namespace std;
 
-
 char *splitstr = "><";
-		
+
 // 交易接口及回调接口
 string tradeUsers[MAXUSERS];
 CThostFtdcTraderApi *tradeApis[MAXUSERS];
@@ -25,10 +24,6 @@ int indicator = -1;
 CThostFtdcMdApi *pMdApi = NULL;
 CMdSpi* pMdSpi = NULL;
 static CallbackDelegate MdCallback;
-/*
-CThostFtdcTraderApi *pTradeApi;
-CTradeSpi *pTradeSpi;
-static CallbackDelegate tradeCallback = NULL;*/
 
 // 交易日
 TThostFtdcDateType TradingDay;
@@ -54,7 +49,7 @@ int TradeInitAPI(char *server_addr, CallbackDelegate callback, char* tradeUser)
 
 	// 回调函数
 	tradeCallbacks[indicator] = callback;
-	
+
 	// brokerid + userid
 	tradeUsers[indicator] = (string)tradeUser;
 
@@ -103,7 +98,6 @@ int MdInitAPI(char *server_addr, CallbackDelegate callback)
 		return 0;
 }
 
-
 // 回调函数，所有TradeSpi.cpp中的函数，返回值均通过此处返回C#
 int TradeResponse(char *result, int nRequestID, int bIsLast, int m_indicator)
 {
@@ -143,18 +137,31 @@ int TradeSendRequest(char *req)
 	nRequestID = atoi(v[0].c_str());
 	string modulename = v[1];
 	string requesttype = v[2];
-	
+
 	// 获取请求所属用户
 	string brokerID = v[3];
 	string userID = v[4];
 	string user = brokerID + "-" + userID;
-	if (modulename == "Md")//行情相关
+	// 查找对应接口
+	int i = 0;
+	for (i = 0; i < indicator; i++)
 	{
+		if (tradeUsers[i] == user)
+			break;
+	}
 
-		CMdSpi *spi_ptr = dynamic_cast<CMdSpi*>(pMdSpi);
+	// 未找到
+	if (i >= indicator)
+		return -2;
+
+	CThostFtdcTraderApi *pTradeApi = tradeApis[i];
+	CTradeSpi *spi_ptr = dynamic_cast<CTradeSpi*>(tradeSpis[i]);
+
+	if (modulename == "sys")
+	{
 		if (requesttype == "login")
 		{
-			//登录
+			// 填写登录结构内容
 			CThostFtdcReqUserLoginField pReqUserLoginField;
 			memset(&pReqUserLoginField, 0, sizeof(CThostFtdcReqUserLoginField));
 			strcpy_s(pReqUserLoginField.TradingDay, sizeof(TThostFtdcDateType), TradingDay);
@@ -165,116 +172,105 @@ int TradeSendRequest(char *req)
 			strcpy_s(pReqUserLoginField.UserProductInfo, sizeof(TThostFtdcProductInfoType), "Q7");
 			strcpy_s(pReqUserLoginField.InterfaceProductInfo, sizeof(TThostFtdcProductInfoType), "THOST User");
 
-			result =  pMdApi->ReqUserLogin(&pReqUserLoginField, 1);
+			result = pTradeApi->ReqUserLogin(&pReqUserLoginField, nRequestID);
 		}
-		else if (requesttype == "disconnected")
+		else if (requesttype == "logout")
 		{
-			spi_ptr->OnFrontDisconnected(1);
 		}
-		else if (requesttype == "subscribe")
+		else if (requesttype == "ReqSettlementInfoConfirm")
 		{
-			char *tmp[2];
-			TThostFtdcInstrumentIDType tmpStr;
-
-			strcpy_s(tmpStr, sizeof(TThostFtdcInstrumentIDType), v[5].c_str());
-			tmp[0] = (char *)&tmpStr;
-			tmp[1] = NULL;
-			result = pMdApi->SubscribeMarketData((char **)tmp, 1);
+			result = spi_ptr->ReqSettlementInfoConfirm(v, nRequestID);
 		}
-		else if (requesttype == "unsubscribe")
-		{
-			char *tmp[2];
-			TThostFtdcInstrumentIDType tmpStr;
-
-			strcpy_s(tmpStr, sizeof(TThostFtdcInstrumentIDType), v[5].c_str());
-			tmp[0] = (char *)&tmpStr;
-			tmp[1] = NULL;
-			result = pMdApi->UnSubscribeMarketData((char **)tmp, 1);
-		}
-		return result;
 	}
-	else
+	else if (modulename == "Query")
 	{
-
-
-		// 查找对应接口
-		int i = 0;
-		for (i = 0; i < indicator; i++)
+		if (requesttype == "order")
 		{
-			if (tradeUsers[i] == user)
-				break;
+			result = spi_ptr->ReqQryOrder((char *)v[3].c_str(), (char *)v[4].c_str(), nRequestID);
 		}
-
-		// 未找到
-		if (i >= indicator)
-			return -2;
-
-		CThostFtdcTraderApi *pTradeApi = tradeApis[i];
-		CTradeSpi *spi_ptr = dynamic_cast<CTradeSpi*>(tradeSpis[i]);
-
-		if (modulename == "sys")
+		else if (requesttype == "trade")
 		{
-			if (requesttype == "login")
-			{
-				// 填写登录结构内容
-				CThostFtdcReqUserLoginField pReqUserLoginField;
-				memset(&pReqUserLoginField, 0, sizeof(CThostFtdcReqUserLoginField));
-				strcpy_s(pReqUserLoginField.TradingDay, sizeof(TThostFtdcDateType), TradingDay);
-				strcpy_s(pReqUserLoginField.BrokerID, sizeof(TThostFtdcBrokerIDType), v[3].c_str());
-				strcpy_s(pReqUserLoginField.UserID, sizeof(TThostFtdcUserIDType), v[4].c_str());
-				strcpy_s(pReqUserLoginField.Password, sizeof(TThostFtdcPasswordType), v[5].c_str());
-
-				strcpy_s(pReqUserLoginField.UserProductInfo, sizeof(TThostFtdcProductInfoType), "Q7");
-				strcpy_s(pReqUserLoginField.InterfaceProductInfo, sizeof(TThostFtdcProductInfoType), "THOST User");
-
-				result = pTradeApi->ReqUserLogin(&pReqUserLoginField, nRequestID);
-			}
-			else if (requesttype == "logout")
-			{
-			}
-			else if (requesttype == "ReqSettlementInfoConfirm")
-			{
-				result = spi_ptr->ReqSettlementInfoConfirm(v, nRequestID);
-			}
+			result = spi_ptr->ReqQryTrade((char *)v[3].c_str(), (char *)v[4].c_str(), nRequestID);
 		}
-		else if (modulename == "Query")
+		else if (requesttype == "position")
 		{
-			if (requesttype == "order")
-			{
-				result = spi_ptr->ReqQryOrder((char *)v[3].c_str(), (char *)v[4].c_str(), nRequestID);
-			}
-			else if (requesttype == "trade")
-			{
-				result = spi_ptr->ReqQryTrade((char *)v[3].c_str(), (char *)v[4].c_str(), nRequestID);
-			}
-			else if (requesttype == "position")
-			{
-				result = spi_ptr->ReqQryInvestorPosition((char *)v[3].c_str(), (char *)v[4].c_str(), nRequestID);
-			}
-			else if (requesttype == "account")
-			{
-				result = spi_ptr->ReqQryTradingAccount((char *)v[3].c_str(), (char *)v[4].c_str(), nRequestID);
-			}
-			else if (requesttype == "marginrate")
-			{
-				// result = spi_ptr->ReqQryInstrumentMarginRate((char *)v[3].c_str(), (char *)v[4].c_str(), nRequestID);
-			}
-			else if (requesttype == "instrument")
-			{
-				result = spi_ptr->ReqQryInstrument((char *)v[3].c_str(), (char *)v[4].c_str(), nRequestID);
-			}
+			result = spi_ptr->ReqQryInvestorPosition((char *)v[3].c_str(), (char *)v[4].c_str(), nRequestID);
 		}
-		else if (modulename == "Order")
+		else if (requesttype == "account")
 		{
-			if (requesttype == "insert") // 报单
-			{
-				result = spi_ptr->ReqOrderInsert(v, nRequestID);
-			}
-			else if (requesttype == "action") // 撤单
-			{
-				result = spi_ptr->ReqOrderAction(v, nRequestID);
-			}
+			result = spi_ptr->ReqQryTradingAccount((char *)v[3].c_str(), (char *)v[4].c_str(), nRequestID);
 		}
-		return result;
+		else if (requesttype == "marketdata")
+		{
+			result = spi_ptr->ReqQryDepthMarketData(v, nRequestID);
+		}
+		else if (requesttype == "marginrate")
+		{
+			// result = spi_ptr->ReqQryInstrumentMarginRate((char *)v[3].c_str(), (char *)v[4].c_str(), nRequestID);
+		}
+		else if (requesttype == "instrument")
+		{
+			result = spi_ptr->ReqQryInstrument((char *)v[3].c_str(), (char *)v[4].c_str(), nRequestID);
+		}
 	}
+	else if (modulename == "Order")
+	{
+		if (requesttype == "insert") // 报单
+		{
+			result = spi_ptr->ReqOrderInsert(v, nRequestID);
+		}
+		else if (requesttype == "action") // 撤单
+		{
+			result = spi_ptr->ReqOrderAction(v, nRequestID);
+		}
+	}
+	return result;
+}
+
+
+int MdSendRequest(char *req)
+{
+	// 交易号
+	int nRequestID=0;
+
+	// 解析请求字符串
+	int result = 0;
+	vector<string> v;
+	split(req, &v);
+
+	// 获取请求号、请求类型
+	nRequestID = atoi(v[0].c_str());
+	string modulename = v[1];
+	string requesttype = v[2];
+
+	// 获取请求所属用户
+	CMdSpi *spi_ptr = dynamic_cast<CMdSpi*>(pMdSpi);
+	if (requesttype == "login")
+	{
+		//登录
+		CThostFtdcReqUserLoginField pReqUserLoginField;
+		memset(&pReqUserLoginField, 0, sizeof(CThostFtdcReqUserLoginField));
+		strcpy_s(pReqUserLoginField.TradingDay, sizeof(TThostFtdcDateType), TradingDay);
+		strcpy_s(pReqUserLoginField.BrokerID, sizeof(TThostFtdcBrokerIDType), v[3].c_str());
+		strcpy_s(pReqUserLoginField.UserID, sizeof(TThostFtdcUserIDType), v[4].c_str());
+		strcpy_s(pReqUserLoginField.Password, sizeof(TThostFtdcPasswordType), v[5].c_str());
+
+		strcpy_s(pReqUserLoginField.UserProductInfo, sizeof(TThostFtdcProductInfoType), "Q7");
+		strcpy_s(pReqUserLoginField.InterfaceProductInfo, sizeof(TThostFtdcProductInfoType), "THOST User");
+
+		result =  pMdApi->ReqUserLogin(&pReqUserLoginField, 1);
+	}
+	else if (requesttype == "disconnected")
+	{
+		spi_ptr->OnFrontDisconnected(1);
+	}
+	else if (requesttype == "subscribe")
+	{
+		result = spi_ptr->SubscribeMarketData((char *)v[6].c_str());
+	}
+	else if (requesttype == "unsubscribe")
+	{
+		result = spi_ptr->UnSubscribeMarketData((char *)v[6].c_str());
+	}
+	return result;
 }

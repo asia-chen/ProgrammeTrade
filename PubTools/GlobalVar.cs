@@ -10,7 +10,7 @@ namespace PubTools
 {
     public class GlobalVar
     {
-        public delegate void TradeCallBack(String[] resStr, int nRequestID);
+        public delegate void CTPCallBack(String[] resStr, int nRequestID);
         public static Form currForm = null;
 
 

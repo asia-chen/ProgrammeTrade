@@ -24,6 +24,7 @@ namespace SimNow
         //    第一组：Trade Front：180.168.146.187:10003，Market Front：180.168.146.187:10013；【电信】
 
         TradeUser myuser = null;
+        MarketData marketdata = null;
 
         public FormMain()
         {
@@ -34,6 +35,10 @@ namespace SimNow
         {
             this.bLogin.Enabled = true;
             this.bOrder.Enabled = false;
+
+            this.bMDConnect.Enabled = true;
+            this.bMDLogin.Enabled = false;
+            this.bMDSubscribe.Enabled = false;
 
             GlobalVar.currForm = this;
             FormTool.setStatusMessage = this.setStatusImpl;
@@ -146,6 +151,25 @@ namespace SimNow
 
             // 执行撤单
             myuser.ReqOrderAction(OrderSysID, ExchangeID);
+        }
+
+        private void bMDConnect_Click(object sender, EventArgs e)
+        {
+            marketdata = new MarketData("9999", "054108", "961123", "tcp://180.168.146.187:10010");
+            bMDConnect.Enabled = false;
+            bMDLogin.Enabled = true;
+        }
+
+        private void bMDLogin_Click(object sender, EventArgs e)
+        {
+            marketdata.ReqLogin();
+            bMDLogin.Enabled = false;
+            bMDSubscribe.Enabled = true;
+        }
+
+        private void bMDSubscribe_Click(object sender, EventArgs e)
+        {
+            marketdata.SubscribeMarketData("hc1701");
         }
     }
 }

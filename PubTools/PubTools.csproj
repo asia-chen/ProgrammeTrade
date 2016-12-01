@@ -42,8 +42,11 @@
     <Compile Include="CommonTool.cs" />
     <Compile Include="Const.cs" />
     <Compile Include="CtpAPI.cs" />
+    <Compile Include="CtpMdApi.cs" />
     <Compile Include="DataTool.cs" />
     <Compile Include="data\Account.cs" />
+    <Compile Include="data\MarketData.cs" />
+    <Compile Include="data\MD.cs" />
     <Compile Include="data\Order.cs" />
     <Compile Include="data\UserPosition.cs" />
     <Compile Include="data\Trade.cs" />

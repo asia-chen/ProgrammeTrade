@@ -52,6 +52,10 @@ class CTradeSpi : public CThostFtdcTraderSpi
 	virtual int ReqOrderAction(vector<string> v, int nRequestID);
 	virtual void OnRspOrderAction(CThostFtdcInputOrderActionField *pInputOrderAction, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
+	// 行情请求(无用)
+	virtual int ReqQryDepthMarketData(vector<string> v, int nRequestID);
+	virtual void OnRspQryDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMarketData, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+
 	private:
 	CThostFtdcTraderApi *m_pTradeApi;
 	int m_indicator;
@@ -65,9 +69,20 @@ public:
 
 public:
 	virtual void OnFrontConnected();
+
 	virtual void OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+	virtual void OnRspUserLogout(CThostFtdcUserLogoutField *pUserLogout, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+	
 	///深度行情通知
 	virtual void OnRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMarketData);
+
+	// 订阅行情
+	virtual int SubscribeMarketData(char* instrumentID);
+	virtual void OnRspSubMarketData(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+	
+	// 退订行情
+	virtual int UnSubscribeMarketData(char* instrumentID);
+	virtual void OnRspUnSubMarketData(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
 private:
 	CThostFtdcMdApi *m_pMdApi;

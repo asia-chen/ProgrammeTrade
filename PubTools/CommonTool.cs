@@ -35,5 +35,24 @@ namespace PubTools
             return 0;
         }
 
+        /// <summary>将string[]格式的参数数组 合并成用分割符分割的string</summary>
+        public static string packString(string[] paras)
+        {
+            string result = "";
+            int num_paras = paras.Length;
+
+            for (int i = 0; i < num_paras; i++)
+            {
+                if (paras[i] == null || paras[i].Equals(""))
+                    result = result + " ";
+                else
+                    result = result + paras[i];
+                if (i < num_paras - 1)
+                {
+                    result = result + Const.splitstr;
+                }
+            }
+            return result;
+        }
     }
 }

@@ -13,6 +13,7 @@ typedef void (*CallbackDelegate)(const char* inputStr, int nRequestID, int bIsLa
 DLLEXPORT int TradeInitAPI(char *server_addr, CallbackDelegate callback, char *tradeUser);
 DLLEXPORT int MdInitAPI(char *server_addr, CallbackDelegate callback);
 DLLEXPORT int TradeSendRequest(char *req);
+DLLEXPORT int MdSendRequest(char *req);
 int TradeResponse(char *result, int nRequestID, int bIsLast, int indicator);
 int MdResponse(char *result);
 

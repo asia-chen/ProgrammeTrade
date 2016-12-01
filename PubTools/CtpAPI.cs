@@ -12,10 +12,8 @@ namespace PubTools
     /// <summary>仅负责接口：发送交易请求、接收回调数据，将多条记录组合返回</summary>
     public class CtpAPI
     {
-        const String splitstr = "><";
-
         /// <summary>回调：业务处理由相应对象完成</summary>
-        GlobalVar.TradeCallBack tradeCallBack = null;
+        GlobalVar.CTPCallBack tradeCallBack = null;
 
         // 请求列表
         private Dictionary<string, string[]> reqList;
@@ -44,7 +42,7 @@ namespace PubTools
         /// <param name="userID">用户ID</param>
         /// <param name="tradeAddr">交易接入地址：tcp://xxx.xxx.xxx.xxx:xxxx</param>
         /// <param name="thisone">业务回调函数</param>
-        public CtpAPI(String brokerID, String userID, String tradeAddr, GlobalVar.TradeCallBack thisone)
+        public CtpAPI(String brokerID, String userID, String tradeAddr, GlobalVar.CTPCallBack thisone)
         {
             tradeCallBack = thisone;
             reqList = new Dictionary<string, string[]>();
@@ -61,12 +59,12 @@ namespace PubTools
         {
             if (paras[0] == "-1")
             {
-                return TradeSendRequest(packString(paras));
+                return TradeSendRequest(CommonTool.packString(paras));
             }
             else
             {
                 reqList.Add(paras[0], paras);
-                return TradeSendRequest(packString(paras));
+                return TradeSendRequest(CommonTool.packString(paras));
             }
         }
 
@@ -78,7 +76,7 @@ namespace PubTools
         {
             // 解析返回数据
             string sRequestID = nRequestID.ToString(); 
-            string[] resStr = Regex.Split(instr, splitstr, RegexOptions.IgnoreCase);
+            string[] resStr = Regex.Split(instr, Const.splitstr, RegexOptions.IgnoreCase);
 
             //通过返回的请求序列号，去查询当初请求的内容
             if (nRequestID >= 0)
@@ -155,26 +153,6 @@ namespace PubTools
 
             // Console.WriteLine("callBack: " + resStr[0] + " " + resStr[1] + " " + resStr[2]);
             tradeCallBack(resStr, nRequestID);
-        }
-
-        /// <summary>将string[]格式的参数数组 合并成用分割符分割的string</summary>
-        private string packString(string[] paras)
-        {
-            string result = "";
-            int num_paras = paras.Length;
-
-            for (int i = 0; i < num_paras; i++)
-            {
-                if (paras[i] == null || paras[i].Equals(""))
-                    result = result + " ";
-                else
-                    result = result + paras[i];
-                if (i < num_paras - 1)
-                {
-                    result = result + splitstr;
-                }
-            }
-            return result;
-        }
+        }        
     }
 }

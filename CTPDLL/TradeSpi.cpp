@@ -21,8 +21,8 @@ extern TThostFtdcDateType TradingDay;
 // 构造及析构函数，可添加自己的处理
 CTradeSpi::CTradeSpi(CThostFtdcTraderApi *pTradeApi, int indicator)
 {
-	 m_pTradeApi = pTradeApi;
-	 m_indicator = indicator;
+	m_pTradeApi = pTradeApi;
+	m_indicator = indicator;
 }
 
 //行情
@@ -54,12 +54,6 @@ void CTradeSpi::OnFrontDisconnected( int nReason)
 {
 	TradeResponse("-1><sys><OnFrontDisconnected><0><FrontDisconnected><0", -1, 1, m_indicator);
 };
-// 行情空连接
-void CMdSpi::OnFrontConnected()
-{
-	MdResponse("-1><Md><OnFrontConnected><0><FrontConnected><0");
-	//TradeResponse("-1><Md><OnFrontConnected><0><FrontConnected><0",-1,1,1);
-};
 
 // 登录结果：若出错返回错误内容，否则返回登录时间
 // 正常做法应该是返回： nRequestID><sys><login><message.....       此为简化版
@@ -72,7 +66,7 @@ void CTradeSpi::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThos
 		TradeResponse((char *)result.c_str(), nRequestID, -1, m_indicator);
 		return ;
 	}
-	
+
 	result = result + ltos(nRequestID);
 	result = result + splitstr + "sys";
 	result = result + splitstr + "login";
@@ -106,7 +100,7 @@ int CTradeSpi::ReqSettlementInfoConfirm(vector<string> v, int nRequestID)
 {
 	CThostFtdcSettlementInfoConfirmField settlementInfoConfirm;
 	memset(&settlementInfoConfirm, 0, sizeof(CThostFtdcSettlementInfoConfirmField));
-	
+
 	///经纪公司代码
 	strcpy_s(settlementInfoConfirm.BrokerID, sizeof(TThostFtdcBrokerIDType), (char *)v[3].c_str());
 	///投资者代码
@@ -125,140 +119,11 @@ void CTradeSpi::OnRspSettlementInfoConfirm(CThostFtdcSettlementInfoConfirmField 
 	return ;
 }
 
-//行情登录
-void CMdSpi::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
-{
-	string result = "-1";
-
-//	result = result + ltos(nRequestID);
-	result = result + splitstr + "Md";
-	result = result + splitstr + "login";
-
-	if (pRspInfo != NULL)
-	{
-		// fail 
-		if (pRspInfo->ErrorID != 0)
-		{
-			result = result + splitstr + ltos(pRspInfo->ErrorID);
-			result = result + splitstr + (string)pRspInfo->ErrorMsg;
-		//	result = result + splitstr + "0";
-		}
-		else
-		{
-			result = result + splitstr + "0";
-			result = result + splitstr + "登录成功";
-		//	result = result + splitstr + "0";
-		}
-		//MdResponse((char *)result.c_str());
-		MdResponse((char *)result.c_str());
-	}
-	return;
-}
-
-//行情返回
-void CMdSpi::OnRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMarketData)
-{
-	    string result = "-1";
-	    result = result + splitstr + "Md";
-	    result = result + splitstr + "Rtn";
-	    //交易日
-		result = result + splitstr + (string)pDepthMarketData->TradingDay;
-		///合约代码
-		result = result + splitstr + (string)pDepthMarketData->InstrumentID;
-		///交易所代码
-		result = result + splitstr + (string)pDepthMarketData->ExchangeID;
-		///合约在交易所的代码
-		result = result + splitstr + (string)pDepthMarketData->ExchangeInstID;
-		///最新价
-		result = result + splitstr + dtos(pDepthMarketData->LastPrice);
-		///上次结算价
-		result = result + splitstr + dtos(pDepthMarketData->PreSettlementPrice);
-		///昨收盘
-		result = result + splitstr + dtos(pDepthMarketData->PreClosePrice);
-		///昨持仓量
-		result = result + splitstr + dtos(pDepthMarketData->PreOpenInterest);
-		///今开盘
-		result = result + splitstr + dtos(pDepthMarketData->OpenPrice);
-		///最高价
-		result = result + splitstr + dtos(pDepthMarketData->HighestPrice);
-		///最低价
-		result = result + splitstr + dtos(pDepthMarketData->LowestPrice);
-		///数量
-		result = result + splitstr + ltos(pDepthMarketData->Volume);
-		///成交金额
-		result = result + splitstr + dtos(pDepthMarketData->Turnover);
-		///持仓量
-		result = result + splitstr + dtos(pDepthMarketData->OpenInterest);
-		///今收盘
-		result = result + splitstr + dtos(pDepthMarketData->ClosePrice);
-		///本次结算价
-		result = result + splitstr + dtos(pDepthMarketData->SettlementPrice);
-		///涨停板价
-		result = result + splitstr + dtos(pDepthMarketData->UpperLimitPrice);
-		///跌停板价
-		result = result + splitstr + dtos(pDepthMarketData->LowerLimitPrice);
-		///昨虚实度
-		result = result + splitstr + dtos(pDepthMarketData->PreDelta);
-		///今虚实度
-		result = result + splitstr + dtos(pDepthMarketData->CurrDelta);
-		///最后修改时间
-		result = result + splitstr + (string)pDepthMarketData->UpdateTime;
-		///最后修改毫秒
-		result = result + splitstr + ltos(pDepthMarketData->UpdateMillisec);
-		///申买价一
-		result = result + splitstr + dtos(pDepthMarketData->BidPrice1);
-		///申买量一
-		result = result + splitstr + ltos(pDepthMarketData->BidVolume1);
-		///申卖价一
-		result = result + splitstr + dtos(pDepthMarketData->AskPrice1);
-		///申卖量一
-		result = result + splitstr + ltos(pDepthMarketData->AskVolume1);
-		///申买价二
-		result = result + splitstr + dtos(pDepthMarketData->BidPrice2);
-		///申买量二
-		result = result + splitstr + ltos(pDepthMarketData->BidVolume2);
-		///申卖价二
-		result = result + splitstr + dtos(pDepthMarketData->AskPrice2);
-		///申卖量二
-		result = result + splitstr + ltos(pDepthMarketData->AskVolume2);
-		///申买价三
-		result = result + splitstr + dtos(pDepthMarketData->BidPrice3);
-		///申买量三
-		result = result + splitstr + ltos(pDepthMarketData->BidVolume3);
-		///申卖价三
-		result = result + splitstr + dtos(pDepthMarketData->AskPrice3);
-		///申卖量三
-		result = result + splitstr + ltos(pDepthMarketData->AskVolume3);
-		///申买价四
-		result = result + splitstr + dtos(pDepthMarketData->BidPrice4);
-		///申买量四
-		result = result + splitstr + ltos(pDepthMarketData->BidVolume4);
-		///申卖价四
-		result = result + splitstr + dtos(pDepthMarketData->AskPrice4);
-		///申卖量四
-		result = result + splitstr + ltos(pDepthMarketData->AskVolume4);
-		///申买价五
-		result = result + splitstr + dtos(pDepthMarketData->BidPrice5);
-		///申买量五
-		result = result + splitstr + ltos(pDepthMarketData->BidVolume5);
-		///申卖价五
-		result = result + splitstr + dtos(pDepthMarketData->AskPrice5);
-		///申卖量五
-		result = result + splitstr + ltos(pDepthMarketData->AskVolume5);
-		///当日均价
-		result = result + splitstr + dtos(pDepthMarketData->AveragePrice);
-		///业务日期
-		result = result + splitstr + (string)pDepthMarketData->ActionDay;
-		//MdResponse((char *)result.c_str());
-		MdResponse((char *)result.c_str());
-	}
-
-
 int CTradeSpi::ReqQryTradingAccount(char *brokerID, char *userID, int nRequestID)
 {
 	CThostFtdcQryTradingAccountField qryTradingAccount;
 	memset(&qryTradingAccount, 0, sizeof(CThostFtdcQryTradingAccountField));
-	
+
 	///经纪公司代码
 	strcpy_s(qryTradingAccount.BrokerID, sizeof(TThostFtdcBrokerIDType),brokerID);	;
 	///投资者代码
@@ -392,7 +257,7 @@ int CTradeSpi::ReqQryInvestorPosition(char *brokerID, char *userID, int nRequest
 {
 	CThostFtdcQryInvestorPositionField qryInvestorPosition;
 	memset(&qryInvestorPosition, 0, sizeof(CThostFtdcQryInvestorPositionField));
-	
+
 	///经纪公司代码
 	strcpy_s(qryInvestorPosition.BrokerID, sizeof(TThostFtdcBrokerIDType),brokerID);	;
 	///投资者代码
@@ -560,6 +425,7 @@ int CTradeSpi::ReqQryTrade(char *brokerID, char *userID, int nRequestID)
 
 	return m_pTradeApi->ReqQryTrade(&qryTrade, nRequestID);
 }
+
 void CTradeSpi::OnRtnTrade(CThostFtdcTradeField *pTrade)
 {
 	string result = "";
@@ -658,7 +524,7 @@ void CTradeSpi::OnRspQryInstrument(CThostFtdcInstrumentField *pInstrument, CThos
 	{
 		return;
 	}
-	
+
 	///合约代码
 	result = result + (string)pInstrument->InstrumentID;
 	///交易所代码
@@ -949,6 +815,7 @@ int CTradeSpi::ReqOrderAction(vector<string> v, int nRequestID)
 	return m_pTradeApi->ReqOrderAction(&inputOrderAction, nRequestID);
 }
 
+// 请求撤单响应
 void CTradeSpi::OnRspOrderAction(CThostFtdcInputOrderActionField *pInputOrderAction, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
 	string result = "";
@@ -959,4 +826,369 @@ void CTradeSpi::OnRspOrderAction(CThostFtdcInputOrderActionField *pInputOrderAct
 		TradeResponse((char *)result.c_str(), nRequestID, -1, m_indicator);
 		return ;
 	}
+}
+
+// 请求行情
+int CTradeSpi::ReqQryDepthMarketData(vector<string> v, int nRequestID)
+{
+	CThostFtdcQryDepthMarketDataField depthMarketData;
+	memset(&depthMarketData, 0, sizeof(CThostFtdcQryDepthMarketDataField));
+
+	strcpy_s(depthMarketData.InstrumentID, sizeof(TThostFtdcInstrumentIDType), (char *)v[6].c_str());
+	return m_pTradeApi->ReqQryDepthMarketData(&depthMarketData, nRequestID);
+}
+
+void CTradeSpi::OnRspQryDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMarketData, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
+{
+	string result = "";
+
+	if(IsErrorRspInfo(pRspInfo))
+	{
+		result = result + ltos(pRspInfo->ErrorID) + splitstr + (string)pRspInfo->ErrorMsg;
+		TradeResponse((char *)result.c_str(), nRequestID, -1, m_indicator);
+		return ;
+	}
+	if(!pDepthMarketData)
+	{
+		return;
+	}
+
+	//交易日
+	result = result + (string)pDepthMarketData->TradingDay;
+	///合约代码
+	result = result + splitstr + (string)pDepthMarketData->InstrumentID;
+	///交易所代码
+	result = result + splitstr + (string)pDepthMarketData->ExchangeID;
+	///合约在交易所的代码
+	result = result + splitstr + (string)pDepthMarketData->ExchangeInstID;
+	///最新价
+	result = result + splitstr + dtos(pDepthMarketData->LastPrice);
+	///上次结算价
+	result = result + splitstr + dtos(pDepthMarketData->PreSettlementPrice);
+	///昨收盘
+	result = result + splitstr + dtos(pDepthMarketData->PreClosePrice);
+	///昨持仓量
+	result = result + splitstr + dtos(pDepthMarketData->PreOpenInterest);
+	///今开盘
+	result = result + splitstr + dtos(pDepthMarketData->OpenPrice);
+	///最高价
+	result = result + splitstr + dtos(pDepthMarketData->HighestPrice);
+	///最低价
+	result = result + splitstr + dtos(pDepthMarketData->LowestPrice);
+	///数量
+	result = result + splitstr + ltos(pDepthMarketData->Volume);
+	///成交金额
+	result = result + splitstr + dtos(pDepthMarketData->Turnover);
+	///持仓量
+	result = result + splitstr + dtos(pDepthMarketData->OpenInterest);
+	///今收盘
+	result = result + splitstr + dtos(pDepthMarketData->ClosePrice);
+	///本次结算价
+	result = result + splitstr + dtos(pDepthMarketData->SettlementPrice);
+	///涨停板价
+	result = result + splitstr + dtos(pDepthMarketData->UpperLimitPrice);
+	///跌停板价
+	result = result + splitstr + dtos(pDepthMarketData->LowerLimitPrice);
+	///昨虚实度
+	result = result + splitstr + dtos(pDepthMarketData->PreDelta);
+	///今虚实度
+	result = result + splitstr + dtos(pDepthMarketData->CurrDelta);
+	///最后修改时间
+	result = result + splitstr + (string)pDepthMarketData->UpdateTime;
+	///最后修改毫秒
+	result = result + splitstr + ltos(pDepthMarketData->UpdateMillisec);
+	///申买价一
+	result = result + splitstr + dtos(pDepthMarketData->BidPrice1);
+	///申买量一
+	result = result + splitstr + ltos(pDepthMarketData->BidVolume1);
+	///申卖价一
+	result = result + splitstr + dtos(pDepthMarketData->AskPrice1);
+	///申卖量一
+	result = result + splitstr + ltos(pDepthMarketData->AskVolume1);
+	///申买价二
+	result = result + splitstr + dtos(pDepthMarketData->BidPrice2);
+	///申买量二
+	result = result + splitstr + ltos(pDepthMarketData->BidVolume2);
+	///申卖价二
+	result = result + splitstr + dtos(pDepthMarketData->AskPrice2);
+	///申卖量二
+	result = result + splitstr + ltos(pDepthMarketData->AskVolume2);
+	///申买价三
+	result = result + splitstr + dtos(pDepthMarketData->BidPrice3);
+	///申买量三
+	result = result + splitstr + ltos(pDepthMarketData->BidVolume3);
+	///申卖价三
+	result = result + splitstr + dtos(pDepthMarketData->AskPrice3);
+	///申卖量三
+	result = result + splitstr + ltos(pDepthMarketData->AskVolume3);
+	///申买价四
+	result = result + splitstr + dtos(pDepthMarketData->BidPrice4);
+	///申买量四
+	result = result + splitstr + ltos(pDepthMarketData->BidVolume4);
+	///申卖价四
+	result = result + splitstr + dtos(pDepthMarketData->AskPrice4);
+	///申卖量四
+	result = result + splitstr + ltos(pDepthMarketData->AskVolume4);
+	///申买价五
+	result = result + splitstr + dtos(pDepthMarketData->BidPrice5);
+	///申买量五
+	result = result + splitstr + ltos(pDepthMarketData->BidVolume5);
+	///申卖价五
+	result = result + splitstr + dtos(pDepthMarketData->AskPrice5);
+	///申卖量五
+	result = result + splitstr + ltos(pDepthMarketData->AskVolume5);
+	///当日均价
+	result = result + splitstr + dtos(pDepthMarketData->AveragePrice);
+	///业务日期
+	result = result + splitstr + (string)pDepthMarketData->ActionDay;
+
+	if (bIsLast)
+	{
+		TradeResponse((char *)result.c_str(), nRequestID, 1, m_indicator);
+	}
+	else
+	{
+		TradeResponse((char *)result.c_str(), nRequestID, 0, m_indicator);
+	}
+
+	return ;
+}
+
+// --------------------------------------------------------------------------------------
+//  行情
+// --------------------------------------------------------------------------------------
+// 行情连接
+void CMdSpi::OnFrontConnected()
+{
+	MdResponse("-1><Md><OnFrontConnected><0><FrontConnected><0");
+};
+
+// 登录
+void CMdSpi::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
+{
+	string result = "";
+
+	result = result + ltos(nRequestID);
+	result = result + splitstr + "Md";
+	result = result + splitstr + "login";
+
+	// fail 
+	if (pRspInfo != NULL)
+	{
+		if (pRspInfo->ErrorID != 0)
+		{
+			result = result + splitstr + ltos(pRspInfo->ErrorID);
+			result = result + splitstr + (string)pRspInfo->ErrorMsg;
+		}
+		else
+		{
+			result = result + splitstr + "0";
+			result = result + splitstr + "登录成功";
+		}
+		MdResponse((char *)result.c_str());
+	}
+	return;
+}
+
+// 登出
+void CMdSpi::OnRspUserLogout(CThostFtdcUserLogoutField *pUserLogout, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
+{
+	string result = "";
+
+	result = result + ltos(nRequestID);
+	result = result + splitstr + "Md";
+	result = result + splitstr + "logout";
+
+	if (pRspInfo != NULL)
+	{
+		if (pRspInfo->ErrorID != 0)
+		{
+			result = result + splitstr + ltos(pRspInfo->ErrorID);
+			result = result + splitstr + (string)pRspInfo->ErrorMsg;
+		}
+		else
+		{
+			result = result + splitstr + "0";
+			result = result + splitstr + "登出成功";
+		}
+	}
+	MdResponse((char *)result.c_str());
+	return;
+}
+
+// 订阅行情
+int CMdSpi::SubscribeMarketData(char* instrumentID)
+{
+	char *tmp[2];
+	TThostFtdcInstrumentIDType tmpStr;
+
+	strcpy_s(tmpStr, sizeof(TThostFtdcInstrumentIDType), instrumentID);
+	tmp[0] = (char *)&tmpStr;
+	tmp[1] = NULL;
+	return m_pMdApi->SubscribeMarketData((char **)tmp, 1);
+}
+
+/// 订阅行情返回：目前仅支持单合同订阅，不考虑bIisLast
+void CMdSpi::OnRspSubMarketData(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
+{
+	string result = "";
+
+	result = result + ltos(nRequestID);
+	result = result + splitstr + "Md";
+	result = result + splitstr + "subscribe";
+
+	if (pRspInfo != NULL)
+	{
+		if (pRspInfo->ErrorID != 0)
+		{
+			result = result + splitstr + ltos(pRspInfo->ErrorID);
+			result = result + splitstr + (string)pRspInfo->ErrorMsg;
+		}
+		else
+		{
+			result = result + splitstr + "0";
+			result = result + splitstr + "订阅成功";
+		}
+	}
+	result = result + splitstr + "1";
+	result = result + splitstr + (string)pSpecificInstrument->InstrumentID;
+	MdResponse((char *)result.c_str());
+	return;
+}
+
+// 退订行情
+int CMdSpi::UnSubscribeMarketData(char* instrumentID)
+{
+	char *tmp[2];
+	TThostFtdcInstrumentIDType tmpStr;
+
+	strcpy_s(tmpStr, sizeof(TThostFtdcInstrumentIDType), instrumentID);
+	tmp[0] = (char *)&tmpStr;
+	tmp[1] = NULL;
+	return m_pMdApi->UnSubscribeMarketData((char **)tmp, 1);
+}
+void CMdSpi::OnRspUnSubMarketData(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
+{
+	string result = "";
+
+	result = result + ltos(nRequestID);
+	result = result + splitstr + "Md";
+	result = result + splitstr + "unsubscribe";
+
+	if (pRspInfo != NULL)
+	{
+		if (pRspInfo->ErrorID != 0)
+		{
+			result = result + splitstr + ltos(pRspInfo->ErrorID);
+			result = result + splitstr + (string)pRspInfo->ErrorMsg;
+		}
+		else
+		{
+			result = result + splitstr + "0";
+			result = result + splitstr + "退订成功";
+		}
+	}
+	result = result + splitstr + "1";
+	result = result + splitstr + (string)pSpecificInstrument->InstrumentID;
+	MdResponse((char *)result.c_str());
+	return;
+}
+
+//行情返回
+void CMdSpi::OnRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMarketData)
+{
+	string result = "-1";
+	result = result + splitstr + "Md";
+	result = result + splitstr + "marketdata";
+	result = result + splitstr + "0" + splitstr + "0" + splitstr + "1";
+	//交易日
+	result = result + splitstr + (string)pDepthMarketData->TradingDay;
+	///合约代码
+	result = result + splitstr + (string)pDepthMarketData->InstrumentID;
+	///交易所代码
+	result = result + splitstr + (string)pDepthMarketData->ExchangeID;
+	///合约在交易所的代码
+	result = result + splitstr + (string)pDepthMarketData->ExchangeInstID;
+	///最新价
+	result = result + splitstr + dtos(pDepthMarketData->LastPrice);
+	///上次结算价
+	result = result + splitstr + dtos(pDepthMarketData->PreSettlementPrice);
+	///昨收盘
+	result = result + splitstr + dtos(pDepthMarketData->PreClosePrice);
+	///昨持仓量
+	result = result + splitstr + dtos(pDepthMarketData->PreOpenInterest);
+	///今开盘
+	result = result + splitstr + dtos(pDepthMarketData->OpenPrice);
+	///最高价
+	result = result + splitstr + dtos(pDepthMarketData->HighestPrice);
+	///最低价
+	result = result + splitstr + dtos(pDepthMarketData->LowestPrice);
+	///数量
+	result = result + splitstr + ltos(pDepthMarketData->Volume);
+	///成交金额
+	result = result + splitstr + dtos(pDepthMarketData->Turnover);
+	///持仓量
+	result = result + splitstr + dtos(pDepthMarketData->OpenInterest);
+	///今收盘
+	result = result + splitstr + dtos(pDepthMarketData->ClosePrice);
+	///本次结算价
+	result = result + splitstr + dtos(pDepthMarketData->SettlementPrice);
+	///涨停板价
+	result = result + splitstr + dtos(pDepthMarketData->UpperLimitPrice);
+	///跌停板价
+	result = result + splitstr + dtos(pDepthMarketData->LowerLimitPrice);
+	///昨虚实度
+	result = result + splitstr + dtos(pDepthMarketData->PreDelta);
+	///今虚实度
+	result = result + splitstr + dtos(pDepthMarketData->CurrDelta);
+	///最后修改时间
+	result = result + splitstr + (string)pDepthMarketData->UpdateTime;
+	///最后修改毫秒
+	result = result + splitstr + ltos(pDepthMarketData->UpdateMillisec);
+	///申买价一
+	result = result + splitstr + dtos(pDepthMarketData->BidPrice1);
+	///申买量一
+	result = result + splitstr + ltos(pDepthMarketData->BidVolume1);
+	///申卖价一
+	result = result + splitstr + dtos(pDepthMarketData->AskPrice1);
+	///申卖量一
+	result = result + splitstr + ltos(pDepthMarketData->AskVolume1);
+	///申买价二
+	result = result + splitstr + dtos(pDepthMarketData->BidPrice2);
+	///申买量二
+	result = result + splitstr + ltos(pDepthMarketData->BidVolume2);
+	///申卖价二
+	result = result + splitstr + dtos(pDepthMarketData->AskPrice2);
+	///申卖量二
+	result = result + splitstr + ltos(pDepthMarketData->AskVolume2);
+	///申买价三
+	result = result + splitstr + dtos(pDepthMarketData->BidPrice3);
+	///申买量三
+	result = result + splitstr + ltos(pDepthMarketData->BidVolume3);
+	///申卖价三
+	result = result + splitstr + dtos(pDepthMarketData->AskPrice3);
+	///申卖量三
+	result = result + splitstr + ltos(pDepthMarketData->AskVolume3);
+	///申买价四
+	result = result + splitstr + dtos(pDepthMarketData->BidPrice4);
+	///申买量四
+	result = result + splitstr + ltos(pDepthMarketData->BidVolume4);
+	///申卖价四
+	result = result + splitstr + dtos(pDepthMarketData->AskPrice4);
+	///申卖量四
+	result = result + splitstr + ltos(pDepthMarketData->AskVolume4);
+	///申买价五
+	result = result + splitstr + dtos(pDepthMarketData->BidPrice5);
+	///申买量五
+	result = result + splitstr + ltos(pDepthMarketData->BidVolume5);
+	///申卖价五
+	result = result + splitstr + dtos(pDepthMarketData->AskPrice5);
+	///申卖量五
+	result = result + splitstr + ltos(pDepthMarketData->AskVolume5);
+	///当日均价
+	result = result + splitstr + dtos(pDepthMarketData->AveragePrice);
+	///业务日期
+	result = result + splitstr + (string)pDepthMarketData->ActionDay;
+
+	MdResponse((char *)result.c_str());
 }

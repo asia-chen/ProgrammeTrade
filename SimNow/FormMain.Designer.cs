@@ -64,6 +64,7 @@
             this.gridColumn7 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridColumn16 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridColumn18 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.gridColumn19 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gcTrade = new DevExpress.XtraGrid.GridControl();
             this.gvTrade = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.gridColumn17 = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -80,7 +81,9 @@
             this.statusLabelRight = new System.Windows.Forms.ToolStripStatusLabel();
             this.rstOrder = new DevExpress.Data.RealTimeSource();
             this.rtsTrade = new DevExpress.Data.RealTimeSource();
-            this.gridColumn19 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.bMDConnect = new System.Windows.Forms.Button();
+            this.bMDLogin = new System.Windows.Forms.Button();
+            this.bMDSubscribe = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -189,7 +192,7 @@
             this.groupBox2.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.groupBox2.Location = new System.Drawing.Point(24, 178);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(471, 329);
+            this.groupBox2.Size = new System.Drawing.Size(471, 290);
             this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
             // 
@@ -471,6 +474,12 @@
             this.gridColumn18.VisibleIndex = 9;
             this.gridColumn18.Width = 113;
             // 
+            // gridColumn19
+            // 
+            this.gridColumn19.Caption = "gridColumn19";
+            this.gridColumn19.FieldName = "ExchangeID";
+            this.gridColumn19.Name = "gridColumn19";
+            // 
             // gcTrade
             // 
             this.gcTrade.Location = new System.Drawing.Point(516, 270);
@@ -611,17 +620,44 @@
             this.rtsTrade.DisplayableProperties = null;
             this.rtsTrade.UseWeakEventHandler = true;
             // 
-            // gridColumn19
+            // bMDConnect
             // 
-            this.gridColumn19.Caption = "gridColumn19";
-            this.gridColumn19.FieldName = "ExchangeID";
-            this.gridColumn19.Name = "gridColumn19";
+            this.bMDConnect.Location = new System.Drawing.Point(24, 475);
+            this.bMDConnect.Name = "bMDConnect";
+            this.bMDConnect.Size = new System.Drawing.Size(135, 34);
+            this.bMDConnect.TabIndex = 10;
+            this.bMDConnect.Text = "行情连接";
+            this.bMDConnect.UseVisualStyleBackColor = true;
+            this.bMDConnect.Click += new System.EventHandler(this.bMDConnect_Click);
+            // 
+            // bMDLogin
+            // 
+            this.bMDLogin.Location = new System.Drawing.Point(165, 475);
+            this.bMDLogin.Name = "bMDLogin";
+            this.bMDLogin.Size = new System.Drawing.Size(135, 34);
+            this.bMDLogin.TabIndex = 11;
+            this.bMDLogin.Text = "行情登录";
+            this.bMDLogin.UseVisualStyleBackColor = true;
+            this.bMDLogin.Click += new System.EventHandler(this.bMDLogin_Click);
+            // 
+            // bMDSubscribe
+            // 
+            this.bMDSubscribe.Location = new System.Drawing.Point(306, 475);
+            this.bMDSubscribe.Name = "bMDSubscribe";
+            this.bMDSubscribe.Size = new System.Drawing.Size(135, 34);
+            this.bMDSubscribe.TabIndex = 12;
+            this.bMDSubscribe.Text = "行情订阅";
+            this.bMDSubscribe.UseVisualStyleBackColor = true;
+            this.bMDSubscribe.Click += new System.EventHandler(this.bMDSubscribe_Click);
             // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 27F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1194, 534);
+            this.Controls.Add(this.bMDSubscribe);
+            this.Controls.Add(this.bMDLogin);
+            this.Controls.Add(this.bMDConnect);
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.gcTrade);
             this.Controls.Add(this.gcOrder);
@@ -706,6 +742,9 @@
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn16;
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn18;
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn19;
+        private System.Windows.Forms.Button bMDConnect;
+        private System.Windows.Forms.Button bMDLogin;
+        private System.Windows.Forms.Button bMDSubscribe;
     }
 }
 

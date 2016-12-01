@@ -119,6 +119,12 @@ namespace PubTools.data
                 onReqQryPosition(resStr);
                 return;
             }
+            if (resStr[1].Equals("Query") && resStr[2].Equals("marketdata"))
+            {
+                onRspQryMarketData(resStr);
+                return;
+            }
+
             /*if (resStr[1].Equals("Query") && resStr[2].Equals("marginrate"))
             {
                 //  thisTradeUser.onReqQryMarginRate(resStr);
@@ -283,6 +289,40 @@ namespace PubTools.data
                 UserPosition tmp_position = new UserPosition();
                 tmp_position.SetData(resStr, i * eachrecord + 6);
                 this.position.Add(tmp_position);
+            }
+            return 0;
+        }
+
+        // --------------------------------------------------------------------------------
+        /// <summary>查询行情</summary>
+        public int ReqQryMarketData(String instrumentID)
+        {
+            if (this.ctpApi == null)
+                return -1;
+
+            String[] para = new String[7];
+
+            para[0] = requestID.ToString();
+            requestID++;
+
+            para[1] = "Query";
+            para[2] = "marketdata";
+            para[3] = this.brokerID.Trim();
+            para[4] = this.userID.Trim();
+            para[5] = "";
+            para[6] = instrumentID;
+
+            this.ctpApi.tradeSendRequest(para);
+            return 0;
+        }
+        /// <summary>查询行情返回</summary>
+        private int onRspQryMarketData(String[] resStr)
+        {
+            int eachRecord = 44;
+            int totalRecord = (resStr.Length - 6) / eachRecord;
+            for (int i = 0; i < totalRecord; i++)
+            {
+                Console.WriteLine(resStr[20 * i + 26]);
             }
             return 0;
         }
