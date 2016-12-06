@@ -34,9 +34,6 @@ namespace PubTools.data
         private long requestID = 0;
         private CtpAPI ctpApi;
 
-        // 报单本地编号
-        private long localOrderID = 0;
-        
         /// 业务数据
         /// 资金
         public Account account { get; set; }
@@ -220,7 +217,7 @@ namespace PubTools.data
         {
             if (this.ctpApi == null)
                 return -1;
-            if (!isLogin)
+            if (currStatus != 2)
                 return -2;
 
             String[] para = new String[6];
@@ -246,6 +243,7 @@ namespace PubTools.data
             }
 
             account.SetData(resStr);
+            FormTool.AccountProcess(account);
             return 0;
         }
 
@@ -255,6 +253,8 @@ namespace PubTools.data
         {
             if (this.ctpApi == null)
                 return -1;
+            if (currStatus != 2)
+                return -2;
 
             String[] para = new String[6];
 
@@ -334,8 +334,21 @@ namespace PubTools.data
         /// <param name="offsetFlag">开平</param>
         /// <param name="price">价格</param>
         /// <param name="volume">数量</param>
-        public int ReqOrderInsert(String instrumentID, String direction, String offsetFlag, double price, long volume)
+        /// <param name="orderType">委托类型，两位数字字符串，影响OrderLocalID</param>
+        /// <returns>0 成功 -1 委托类型长度错误，-2 委托类型内容错误</returns>
+        public int ReqOrderInsert(String instrumentID, String direction, String offsetFlag, double price, long volume,String orderType)
         {
+            if (orderType.Length != 2)
+                return -1;
+            try
+            {
+                long.Parse(orderType);
+            }
+            catch (Exception)
+            {
+                return -2;
+            }
+
             String[] para = new String[12];
 
             para[0] = requestID.ToString();
@@ -352,12 +365,10 @@ namespace PubTools.data
             para[8] = offsetFlag;
             para[9] = price.ToString();
             para[10] = volume.ToString();
-            para[11] = localOrderID.ToString();
-            localOrderID++;
+            para[11] = orderType + DateTime.Now.ToString("HHmmssfff");
 
-            this.ctpApi.tradeSendRequest(para);
-            Console.WriteLine("Send an Order:" + localOrderID.ToString());
-            return 0;
+            Console.WriteLine("Send an Order:" + para[11]);
+            return this.ctpApi.tradeSendRequest(para);
         }
 
         /// <summary>报单返回：目前仅处理错误信息</summary>
@@ -378,11 +389,6 @@ namespace PubTools.data
                 // TODO: 对于拒绝的报单，如何展示、存储，需完善
                 if (thisorder.OrderSysID != null && !thisorder.OrderSysID.Trim().Equals(""))
                 {
-                    // 登录后重传各个报单，确保本地委托编号唯一（若订阅私有流不是重传模式，此处需调整）
-                    long tmpOrderID = long.Parse(thisorder.OrderRef);
-                    if (tmpOrderID >= localOrderID)
-                        localOrderID = tmpOrderID + 1;
-
                     // 当前列表中是否已包含该报单，存在则更新，否则则添加
                     int i = 0;
                     for (i = 0; i < order.Count; i++)

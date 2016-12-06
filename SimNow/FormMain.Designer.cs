@@ -84,6 +84,29 @@
             this.bMDConnect = new System.Windows.Forms.Button();
             this.bMDLogin = new System.Windows.Forms.Button();
             this.bMDSubscribe = new System.Windows.Forms.Button();
+            this.gcMarketData = new DevExpress.XtraGrid.GridControl();
+            this.gvMarketData = new DevExpress.XtraGrid.Views.Grid.GridView();
+            this.gridColumn20 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.gridColumn21 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.gridColumn22 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.bFundRefresh = new System.Windows.Forms.Button();
+            this.label8 = new System.Windows.Forms.Label();
+            this.tbPositionProfit = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.tbExchangeMargin = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.tbAvailable = new System.Windows.Forms.TextBox();
+            this.gcPosition = new DevExpress.XtraGrid.GridControl();
+            this.gvPosition = new DevExpress.XtraGrid.Views.Grid.GridView();
+            this.gridColumn25 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.gridColumn27 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.gridColumn23 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.gridColumn24 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.gridColumn26 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.gridColumn28 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.rtsPosition = new DevExpress.Data.RealTimeSource();
+            this.bRefreshPosition = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -93,11 +116,16 @@
             ((System.ComponentModel.ISupportInitialize)(this.gcTrade)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gvTrade)).BeginInit();
             this.statusStrip.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gcMarketData)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gvMarketData)).BeginInit();
+            this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gcPosition)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gvPosition)).BeginInit();
             this.SuspendLayout();
             // 
             // tbUsername
             // 
-            this.tbUsername.Location = new System.Drawing.Point(106, 87);
+            this.tbUsername.Location = new System.Drawing.Point(106, 65);
             this.tbUsername.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
             this.tbUsername.Name = "tbUsername";
             this.tbUsername.Size = new System.Drawing.Size(196, 34);
@@ -107,7 +135,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(25, 87);
+            this.label1.Location = new System.Drawing.Point(25, 65);
             this.label1.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(72, 27);
@@ -117,7 +145,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(25, 135);
+            this.label2.Location = new System.Drawing.Point(25, 107);
             this.label2.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(64, 27);
@@ -126,7 +154,7 @@
             // 
             // tbPassword
             // 
-            this.tbPassword.Location = new System.Drawing.Point(106, 135);
+            this.tbPassword.Location = new System.Drawing.Point(106, 107);
             this.tbPassword.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
             this.tbPassword.Name = "tbPassword";
             this.tbPassword.PasswordChar = '*';
@@ -136,7 +164,7 @@
             // 
             // bLogin
             // 
-            this.bLogin.Location = new System.Drawing.Point(322, 87);
+            this.bLogin.Location = new System.Drawing.Point(322, 65);
             this.bLogin.Name = "bLogin";
             this.bLogin.Size = new System.Drawing.Size(135, 34);
             this.bLogin.TabIndex = 4;
@@ -154,16 +182,17 @@
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.tbPassword);
             this.groupBox1.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.groupBox1.Location = new System.Drawing.Point(24, 12);
+            this.groupBox1.Location = new System.Drawing.Point(24, 2);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(471, 171);
+            this.groupBox1.Size = new System.Drawing.Size(471, 152);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "登录";
             // 
             // lTradeAddr
             // 
             this.lTradeAddr.AutoSize = true;
-            this.lTradeAddr.Location = new System.Drawing.Point(127, 22);
+            this.lTradeAddr.Location = new System.Drawing.Point(127, 31);
             this.lTradeAddr.Name = "lTradeAddr";
             this.lTradeAddr.Size = new System.Drawing.Size(289, 27);
             this.lTradeAddr.TabIndex = 6;
@@ -172,7 +201,7 @@
             // lBrokerID
             // 
             this.lBrokerID.AutoSize = true;
-            this.lBrokerID.Location = new System.Drawing.Point(30, 22);
+            this.lBrokerID.Location = new System.Drawing.Point(30, 31);
             this.lBrokerID.Name = "lBrokerID";
             this.lBrokerID.Size = new System.Drawing.Size(60, 27);
             this.lBrokerID.TabIndex = 5;
@@ -190,18 +219,19 @@
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Controls.Add(this.tbPrice);
             this.groupBox2.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.groupBox2.Location = new System.Drawing.Point(24, 178);
+            this.groupBox2.Location = new System.Drawing.Point(24, 157);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(471, 290);
+            this.groupBox2.Size = new System.Drawing.Size(471, 238);
             this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "委托";
             // 
             // panel2
             // 
             this.panel2.Controls.Add(this.rbCloseToday);
             this.panel2.Controls.Add(this.rbOpen);
             this.panel2.Controls.Add(this.rbClose);
-            this.panel2.Location = new System.Drawing.Point(102, 149);
+            this.panel2.Location = new System.Drawing.Point(102, 111);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(355, 39);
             this.panel2.TabIndex = 9;
@@ -243,7 +273,7 @@
             // 
             this.panel1.Controls.Add(this.rbBuy);
             this.panel1.Controls.Add(this.rbSell);
-            this.panel1.Location = new System.Drawing.Point(102, 104);
+            this.panel1.Location = new System.Drawing.Point(102, 67);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(200, 39);
             this.panel1.TabIndex = 8;
@@ -273,7 +303,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(25, 247);
+            this.label5.Location = new System.Drawing.Point(22, 195);
             this.label5.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(52, 27);
@@ -282,7 +312,7 @@
             // 
             // tbVolume
             // 
-            this.tbVolume.Location = new System.Drawing.Point(106, 247);
+            this.tbVolume.Location = new System.Drawing.Point(103, 195);
             this.tbVolume.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
             this.tbVolume.Name = "tbVolume";
             this.tbVolume.Size = new System.Drawing.Size(196, 34);
@@ -292,7 +322,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(25, 50);
+            this.label3.Location = new System.Drawing.Point(25, 27);
             this.label3.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(52, 27);
@@ -301,7 +331,7 @@
             // 
             // bOrder
             // 
-            this.bOrder.Location = new System.Drawing.Point(322, 50);
+            this.bOrder.Location = new System.Drawing.Point(322, 27);
             this.bOrder.Name = "bOrder";
             this.bOrder.Size = new System.Drawing.Size(135, 34);
             this.bOrder.TabIndex = 4;
@@ -311,7 +341,7 @@
             // 
             // tbInstrumentID
             // 
-            this.tbInstrumentID.Location = new System.Drawing.Point(106, 50);
+            this.tbInstrumentID.Location = new System.Drawing.Point(106, 27);
             this.tbInstrumentID.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
             this.tbInstrumentID.Name = "tbInstrumentID";
             this.tbInstrumentID.Size = new System.Drawing.Size(196, 34);
@@ -321,7 +351,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(25, 195);
+            this.label4.Location = new System.Drawing.Point(22, 154);
             this.label4.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(52, 27);
@@ -330,7 +360,7 @@
             // 
             // tbPrice
             // 
-            this.tbPrice.Location = new System.Drawing.Point(106, 195);
+            this.tbPrice.Location = new System.Drawing.Point(103, 154);
             this.tbPrice.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
             this.tbPrice.Name = "tbPrice";
             this.tbPrice.Size = new System.Drawing.Size(196, 34);
@@ -590,9 +620,9 @@
             this.statusLabelLeft,
             this.statusLabelCenter,
             this.statusLabelRight});
-            this.statusStrip.Location = new System.Drawing.Point(0, 512);
+            this.statusStrip.Location = new System.Drawing.Point(0, 734);
             this.statusStrip.Name = "statusStrip";
-            this.statusStrip.Size = new System.Drawing.Size(1194, 22);
+            this.statusStrip.Size = new System.Drawing.Size(1244, 22);
             this.statusStrip.TabIndex = 9;
             // 
             // statusLabelLeft
@@ -622,7 +652,7 @@
             // 
             // bMDConnect
             // 
-            this.bMDConnect.Location = new System.Drawing.Point(24, 475);
+            this.bMDConnect.Location = new System.Drawing.Point(24, 597);
             this.bMDConnect.Name = "bMDConnect";
             this.bMDConnect.Size = new System.Drawing.Size(135, 34);
             this.bMDConnect.TabIndex = 10;
@@ -632,7 +662,7 @@
             // 
             // bMDLogin
             // 
-            this.bMDLogin.Location = new System.Drawing.Point(165, 475);
+            this.bMDLogin.Location = new System.Drawing.Point(165, 597);
             this.bMDLogin.Name = "bMDLogin";
             this.bMDLogin.Size = new System.Drawing.Size(135, 34);
             this.bMDLogin.TabIndex = 11;
@@ -642,7 +672,7 @@
             // 
             // bMDSubscribe
             // 
-            this.bMDSubscribe.Location = new System.Drawing.Point(306, 475);
+            this.bMDSubscribe.Location = new System.Drawing.Point(306, 597);
             this.bMDSubscribe.Name = "bMDSubscribe";
             this.bMDSubscribe.Size = new System.Drawing.Size(135, 34);
             this.bMDSubscribe.TabIndex = 12;
@@ -650,11 +680,254 @@
             this.bMDSubscribe.UseVisualStyleBackColor = true;
             this.bMDSubscribe.Click += new System.EventHandler(this.bMDSubscribe_Click);
             // 
+            // gcMarketData
+            // 
+            this.gcMarketData.Location = new System.Drawing.Point(24, 643);
+            this.gcMarketData.MainView = this.gvMarketData;
+            this.gcMarketData.Name = "gcMarketData";
+            this.gcMarketData.Size = new System.Drawing.Size(416, 82);
+            this.gcMarketData.TabIndex = 13;
+            this.gcMarketData.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
+            this.gvMarketData});
+            // 
+            // gvMarketData
+            // 
+            this.gvMarketData.ActiveFilterEnabled = false;
+            this.gvMarketData.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] {
+            this.gridColumn20,
+            this.gridColumn21,
+            this.gridColumn22});
+            this.gvMarketData.GridControl = this.gcMarketData;
+            this.gvMarketData.Name = "gvMarketData";
+            this.gvMarketData.OptionsBehavior.AllowAddRows = DevExpress.Utils.DefaultBoolean.False;
+            this.gvMarketData.OptionsBehavior.AllowDeleteRows = DevExpress.Utils.DefaultBoolean.False;
+            this.gvMarketData.OptionsBehavior.AllowFixedGroups = DevExpress.Utils.DefaultBoolean.False;
+            this.gvMarketData.OptionsBehavior.Editable = false;
+            this.gvMarketData.OptionsBehavior.ReadOnly = true;
+            this.gvMarketData.OptionsFilter.AllowColumnMRUFilterList = false;
+            this.gvMarketData.OptionsFilter.AllowFilterEditor = false;
+            this.gvMarketData.OptionsFilter.AllowFilterIncrementalSearch = false;
+            this.gvMarketData.OptionsFilter.AllowMRUFilterList = false;
+            this.gvMarketData.OptionsFilter.AllowMultiSelectInCheckedFilterPopup = false;
+            this.gvMarketData.OptionsView.AllowHtmlDrawGroups = false;
+            this.gvMarketData.OptionsView.EnableAppearanceEvenRow = true;
+            this.gvMarketData.OptionsView.ShowGroupExpandCollapseButtons = false;
+            this.gvMarketData.OptionsView.ShowGroupPanel = false;
+            this.gvMarketData.OptionsView.ShowIndicator = false;
+            // 
+            // gridColumn20
+            // 
+            this.gridColumn20.Caption = " ";
+            this.gridColumn20.FieldName = "Name";
+            this.gridColumn20.Name = "gridColumn20";
+            this.gridColumn20.Visible = true;
+            this.gridColumn20.VisibleIndex = 0;
+            // 
+            // gridColumn21
+            // 
+            this.gridColumn21.Caption = "价格";
+            this.gridColumn21.FieldName = "Price";
+            this.gridColumn21.Name = "gridColumn21";
+            this.gridColumn21.Visible = true;
+            this.gridColumn21.VisibleIndex = 1;
+            // 
+            // gridColumn22
+            // 
+            this.gridColumn22.Caption = "数量";
+            this.gridColumn22.FieldName = "Volume";
+            this.gridColumn22.Name = "gridColumn22";
+            this.gridColumn22.Visible = true;
+            this.gridColumn22.VisibleIndex = 2;
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.bRefreshPosition);
+            this.groupBox3.Controls.Add(this.bFundRefresh);
+            this.groupBox3.Controls.Add(this.label8);
+            this.groupBox3.Controls.Add(this.tbPositionProfit);
+            this.groupBox3.Controls.Add(this.label7);
+            this.groupBox3.Controls.Add(this.tbExchangeMargin);
+            this.groupBox3.Controls.Add(this.label6);
+            this.groupBox3.Controls.Add(this.tbAvailable);
+            this.groupBox3.Location = new System.Drawing.Point(24, 401);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(471, 171);
+            this.groupBox3.TabIndex = 14;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "资金";
+            // 
+            // bFundRefresh
+            // 
+            this.bFundRefresh.Location = new System.Drawing.Point(322, 33);
+            this.bFundRefresh.Name = "bFundRefresh";
+            this.bFundRefresh.Size = new System.Drawing.Size(135, 34);
+            this.bFundRefresh.TabIndex = 7;
+            this.bFundRefresh.Text = "刷新资金";
+            this.bFundRefresh.UseVisualStyleBackColor = true;
+            this.bFundRefresh.Click += new System.EventHandler(this.bFundRefresh_Click);
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(21, 118);
+            this.label8.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(52, 27);
+            this.label8.TabIndex = 15;
+            this.label8.Text = "浮盈";
+            // 
+            // tbPositionProfit
+            // 
+            this.tbPositionProfit.Location = new System.Drawing.Point(102, 118);
+            this.tbPositionProfit.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this.tbPositionProfit.Name = "tbPositionProfit";
+            this.tbPositionProfit.Size = new System.Drawing.Size(196, 34);
+            this.tbPositionProfit.TabIndex = 14;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(21, 74);
+            this.label7.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(52, 27);
+            this.label7.TabIndex = 13;
+            this.label7.Text = "占用";
+            // 
+            // tbExchangeMargin
+            // 
+            this.tbExchangeMargin.Location = new System.Drawing.Point(102, 74);
+            this.tbExchangeMargin.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this.tbExchangeMargin.Name = "tbExchangeMargin";
+            this.tbExchangeMargin.Size = new System.Drawing.Size(196, 34);
+            this.tbExchangeMargin.TabIndex = 12;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(21, 31);
+            this.label6.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(52, 27);
+            this.label6.TabIndex = 11;
+            this.label6.Text = "可用";
+            // 
+            // tbAvailable
+            // 
+            this.tbAvailable.Location = new System.Drawing.Point(102, 31);
+            this.tbAvailable.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this.tbAvailable.Name = "tbAvailable";
+            this.tbAvailable.Size = new System.Drawing.Size(196, 34);
+            this.tbAvailable.TabIndex = 10;
+            // 
+            // gcPosition
+            // 
+            this.gcPosition.Location = new System.Drawing.Point(516, 519);
+            this.gcPosition.MainView = this.gvPosition;
+            this.gcPosition.Name = "gcPosition";
+            this.gcPosition.Size = new System.Drawing.Size(642, 205);
+            this.gcPosition.TabIndex = 15;
+            this.gcPosition.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
+            this.gvPosition});
+            // 
+            // gvPosition
+            // 
+            this.gvPosition.ActiveFilterEnabled = false;
+            this.gvPosition.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] {
+            this.gridColumn25,
+            this.gridColumn27,
+            this.gridColumn23,
+            this.gridColumn24,
+            this.gridColumn26,
+            this.gridColumn28});
+            this.gvPosition.GridControl = this.gcPosition;
+            this.gvPosition.Name = "gvPosition";
+            this.gvPosition.OptionsBehavior.AllowAddRows = DevExpress.Utils.DefaultBoolean.False;
+            this.gvPosition.OptionsBehavior.AllowDeleteRows = DevExpress.Utils.DefaultBoolean.False;
+            this.gvPosition.OptionsBehavior.AllowFixedGroups = DevExpress.Utils.DefaultBoolean.False;
+            this.gvPosition.OptionsBehavior.Editable = false;
+            this.gvPosition.OptionsBehavior.ReadOnly = true;
+            this.gvPosition.OptionsFilter.AllowColumnMRUFilterList = false;
+            this.gvPosition.OptionsFilter.AllowFilterEditor = false;
+            this.gvPosition.OptionsFilter.AllowFilterIncrementalSearch = false;
+            this.gvPosition.OptionsFilter.AllowMRUFilterList = false;
+            this.gvPosition.OptionsFilter.AllowMultiSelectInCheckedFilterPopup = false;
+            this.gvPosition.OptionsView.AllowHtmlDrawGroups = false;
+            this.gvPosition.OptionsView.EnableAppearanceEvenRow = true;
+            this.gvPosition.OptionsView.ShowGroupExpandCollapseButtons = false;
+            this.gvPosition.OptionsView.ShowGroupPanel = false;
+            this.gvPosition.OptionsView.ShowIndicator = false;
+            // 
+            // gridColumn25
+            // 
+            this.gridColumn25.Caption = "合约";
+            this.gridColumn25.FieldName = "InstrumentID";
+            this.gridColumn25.Name = "gridColumn25";
+            this.gridColumn25.Visible = true;
+            this.gridColumn25.VisibleIndex = 0;
+            // 
+            // gridColumn27
+            // 
+            this.gridColumn27.Caption = "买卖";
+            this.gridColumn27.FieldName = "PosiDirection";
+            this.gridColumn27.Name = "gridColumn27";
+            this.gridColumn27.Visible = true;
+            this.gridColumn27.VisibleIndex = 1;
+            // 
+            // gridColumn23
+            // 
+            this.gridColumn23.Caption = "数量";
+            this.gridColumn23.FieldName = "Position";
+            this.gridColumn23.Name = "gridColumn23";
+            this.gridColumn23.Visible = true;
+            this.gridColumn23.VisibleIndex = 2;
+            // 
+            // gridColumn24
+            // 
+            this.gridColumn24.Caption = "成本";
+            this.gridColumn24.FieldName = "PositionCost";
+            this.gridColumn24.Name = "gridColumn24";
+            this.gridColumn24.Visible = true;
+            this.gridColumn24.VisibleIndex = 3;
+            // 
+            // gridColumn26
+            // 
+            this.gridColumn26.Caption = "保证金";
+            this.gridColumn26.FieldName = "UseMargin";
+            this.gridColumn26.Name = "gridColumn26";
+            this.gridColumn26.Visible = true;
+            this.gridColumn26.VisibleIndex = 4;
+            // 
+            // gridColumn28
+            // 
+            this.gridColumn28.Caption = "持仓盈亏";
+            this.gridColumn28.Name = "gridColumn28";
+            this.gridColumn28.Visible = true;
+            this.gridColumn28.VisibleIndex = 5;
+            // 
+            // rtsPosition
+            // 
+            this.rtsPosition.DisplayableProperties = null;
+            this.rtsPosition.UseWeakEventHandler = true;
+            // 
+            // bRefreshPosition
+            // 
+            this.bRefreshPosition.Location = new System.Drawing.Point(322, 74);
+            this.bRefreshPosition.Name = "bRefreshPosition";
+            this.bRefreshPosition.Size = new System.Drawing.Size(135, 34);
+            this.bRefreshPosition.TabIndex = 16;
+            this.bRefreshPosition.Text = "刷新持仓";
+            this.bRefreshPosition.UseVisualStyleBackColor = true;
+            this.bRefreshPosition.Click += new System.EventHandler(this.bRefreshPosition_Click);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 27F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1194, 534);
+            this.ClientSize = new System.Drawing.Size(1244, 756);
+            this.Controls.Add(this.gcPosition);
+            this.Controls.Add(this.groupBox3);
+            this.Controls.Add(this.gcMarketData);
             this.Controls.Add(this.bMDSubscribe);
             this.Controls.Add(this.bMDLogin);
             this.Controls.Add(this.bMDConnect);
@@ -667,6 +940,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
             this.Name = "FormMain";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "模拟交易";
             this.Load += new System.EventHandler(this.FormMain_Load);
             this.groupBox1.ResumeLayout(false);
@@ -683,6 +957,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.gvTrade)).EndInit();
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gcMarketData)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gvMarketData)).EndInit();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gcPosition)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gvPosition)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -745,6 +1025,29 @@
         private System.Windows.Forms.Button bMDConnect;
         private System.Windows.Forms.Button bMDLogin;
         private System.Windows.Forms.Button bMDSubscribe;
+        private DevExpress.XtraGrid.GridControl gcMarketData;
+        private DevExpress.XtraGrid.Views.Grid.GridView gvMarketData;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn20;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn21;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn22;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.TextBox tbAvailable;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TextBox tbPositionProfit;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TextBox tbExchangeMargin;
+        private System.Windows.Forms.Button bFundRefresh;
+        private DevExpress.XtraGrid.GridControl gcPosition;
+        private DevExpress.XtraGrid.Views.Grid.GridView gvPosition;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn25;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn27;
+        private DevExpress.Data.RealTimeSource rtsPosition;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn23;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn24;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn26;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn28;
+        private System.Windows.Forms.Button bRefreshPosition;
     }
 }
 

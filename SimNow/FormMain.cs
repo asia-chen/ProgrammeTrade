@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using PubTools;
 using PubTools.data;
 using System.Threading;
+using System.Text.RegularExpressions;
 
 namespace SimNow
 {
@@ -25,24 +26,42 @@ namespace SimNow
 
         TradeUser myuser = null;
         MarketData marketdata = null;
+        class MdDisplay
+        {
+            public String Name { get; set; }
+            public String Price { get; set; }
+            public String Volume { get; set; }
+        }
+        BindingList<MdDisplay> mdDisplay { get; set; }
+
 
         public FormMain()
         {
             InitializeComponent();
+            this.Top = 0;
+            this.Left = 0;
+
+            mdDisplay = new BindingList<MdDisplay>();
         }
 
         private void FormMain_Load(object sender, EventArgs e)
         {
             this.bLogin.Enabled = true;
             this.bOrder.Enabled = false;
+            this.bFundRefresh.Enabled = false;
+            bRefreshPosition.Enabled = false;
 
             this.bMDConnect.Enabled = true;
             this.bMDLogin.Enabled = false;
             this.bMDSubscribe.Enabled = false;
 
+            this.gcMarketData.DataSource = mdDisplay;
+
             GlobalVar.currForm = this;
             FormTool.setStatusMessage = this.setStatusImpl;
             FormTool.setErrMessage = this.setStatusImpl;
+            FormTool.setMarketData = this.displayMarketData;
+            FormTool.accountProcess = this.displayFund;
         }
 
         private void bLogin_Click(object sender, EventArgs e)
@@ -66,6 +85,8 @@ namespace SimNow
 
             this.bLogin.Enabled = false;
             this.bOrder.Enabled = true;
+            this.bFundRefresh.Enabled = true;
+            this.bRefreshPosition.Enabled = true;
 
             this.rbBuy.Checked = true;
             this.rbOpen.Checked = true;
@@ -76,6 +97,8 @@ namespace SimNow
             rtsTrade.DataSource = myuser.trade;
             gcTrade.DataSource = rtsTrade;
 
+            rtsPosition.DataSource = myuser.position;
+            gcPosition.DataSource = rtsPosition;
         }
 
         private void bOrder_Click(object sender, EventArgs e)
@@ -118,7 +141,7 @@ namespace SimNow
                 OpenOrClose = Const.TradeClose;
             }
 
-            myuser.ReqOrderInsert(this.tbInstrumentID.Text, BuyOrSell, OpenOrClose, price, volume);
+            myuser.ReqOrderInsert(this.tbInstrumentID.Text, BuyOrSell, OpenOrClose, price, volume, "99");
         }
 
         /// <summary>/// 显示状态栏信息/// </summary>
@@ -170,6 +193,58 @@ namespace SimNow
         private void bMDSubscribe_Click(object sender, EventArgs e)
         {
             marketdata.SubscribeMarketData("hc1701");
+        }
+
+        private void displayMarketData(String mdstr)
+        {
+            if (this.gcMarketData.InvokeRequired)
+            {
+                this.Invoke(new FormTool.SetFormMessage(displayMarketData));
+            }
+            else
+            {
+                String[] md = Regex.Split(mdstr, Const.splitstr, RegexOptions.IgnoreCase);
+                if (md.Length != 9)
+                    return;
+
+                mdDisplay.Clear();
+                for (int i = 0; i < 3; i++)
+                {
+                    MdDisplay mdd = new MdDisplay();
+                    mdd.Name = md[i * 3];
+                    mdd.Price = md[i * 3 + 1];
+                    mdd.Volume = md[i * 3 + 2];
+                    mdDisplay.Add(mdd);
+                }
+                this.gcMarketData.Invalidate();
+            }
+        }
+
+        private void bFundRefresh_Click(object sender, EventArgs e)
+        {
+            myuser.ReqQryAccount();
+        }
+
+        private void displayFund(Object o)
+        {
+            if(this.tbAvailable.InvokeRequired)
+            {
+                this.Invoke(new FormTool.DataProcess(displayFund));
+            }
+            else
+            {
+                PubTools.data.Account account = (PubTools.data.Account)o;
+
+                this.tbAvailable.Text = account.Available.ToString();
+                this.tbExchangeMargin.Text = account.ExchangeMargin.ToString();
+                this.tbPositionProfit.Text = account.PositionProfit.ToString();
+            }
+
+        }
+
+        private void bRefreshPosition_Click(object sender, EventArgs e)
+        {
+            myuser.ReqQryPosition();
         }
     }
 }

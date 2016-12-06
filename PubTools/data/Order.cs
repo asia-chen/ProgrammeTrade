@@ -52,7 +52,7 @@ namespace PubTools.data
         ///请求编号
         String RequestID;
         ///本地报单编号
-        String OrderLocalID;
+        public String OrderLocalID { get; set; }
         ///交易所代码
         public String ExchangeID { get; set; }
         ///会员代码

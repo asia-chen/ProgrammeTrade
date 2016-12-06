@@ -13,13 +13,13 @@ namespace PubTools.data
     public class UserPosition
     {
         ///合约代码
-        String InstrumentID;
+        public String InstrumentID { get; set; }
         ///经纪公司代码
         String BrokerID;
         ///投资者代码
         String InvestorID;
         ///持仓多空方向
-        String PosiDirection;
+        public String PosiDirection { get; set; }
         ///投机套保标志
         String HedgeFlag;
         ///持仓日期
@@ -27,7 +27,7 @@ namespace PubTools.data
         ///上日持仓
         long YdPosition;
         ///今日持仓
-        long Position;
+        public long Position { get; set; }
         ///多头冻结
         long LongFrozen;
         ///空头冻结
@@ -45,11 +45,11 @@ namespace PubTools.data
         ///平仓金额
         double CloseAmount;
         ///持仓成本
-        double PositionCost;
+        public double PositionCost { get; set; }
         ///上次占用的保证金
         double PreMargin;
         ///占用的保证金
-        double UseMargin;
+        public double UseMargin { get; set; }
         ///冻结的保证金
         double FrozenMargin;
         ///冻结的资金
@@ -63,7 +63,7 @@ namespace PubTools.data
         ///平仓盈亏
         double CloseProfit;
         ///持仓盈亏
-        double PositionProfit;
+        public double PositionProfit { get; set; }
         ///上次结算价
         double PreSettlementPrice;
         ///本次结算价
@@ -192,7 +192,7 @@ namespace PubTools.data
             ///放弃执行冻结
             AbandonFrozen = long.Parse(resStr[pos + 42]);
 
-            RefreshToDataTable();
+            // RefreshToDataTable();
             return 0;
         }
 

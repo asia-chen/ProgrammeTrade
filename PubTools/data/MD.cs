@@ -30,7 +30,7 @@ namespace PubTools.data
         ///最低价
         double LowestPrice;
         ///数量
-        long Volume;
+        public long Volume { get; set; }
         ///成交金额
         double Turnover;
         ///持仓量
@@ -188,6 +188,32 @@ namespace PubTools.data
             AveragePrice = double.Parse(resStr[pos + 42]);
             ///业务日期
             ActionDay = resStr[pos + 43];
+        }
+
+        public String GetData(long thisVolume)
+        {
+            String result = "";
+            
+            result = result + AddOnePrice(AskVolume1, AskPrice1, "卖一") + Const.splitstr;            
+            result = result + AddOnePrice(thisVolume, LastPrice, "最新") + Const.splitstr;
+            result = result + AddOnePrice(BidVolume1, BidPrice1, "买一");
+
+            return result;
+        }
+
+        private String AddOnePrice(long volume, double price, String name)
+        {
+            String result = name + Const.splitstr;
+
+            if (volume > 0)
+            {
+                result = result + price.ToString() + Const.splitstr + volume.ToString();
+            }
+            else
+            {
+                result = result + " " + Const.splitstr + " ";
+            }
+            return result;
         }
     }
 }

@@ -110,6 +110,25 @@ namespace PubTools
             }
         }
 
+        public static SetFormMessage setMarketData = null;
+        public static void DisplayMarketData(String md)
+        {
+            if (FormTool.setMarketData != null && GlobalVar.currForm != null)
+            {
+                GlobalVar.currForm.Invoke(FormTool.setMarketData, md);
+            }
+        }
 
+        /// <summary>数据后续处理</summary>
+        /// <param name="msg">待显示内容</param> 
+        public delegate void DataProcess(Object o);
+        public static DataProcess accountProcess = null;
+        public static void AccountProcess(Object o)
+        {
+            if (FormTool.accountProcess != null && GlobalVar.currForm != null)
+            {
+                GlobalVar.currForm.Invoke(FormTool.accountProcess, o);
+            }
+        }
     }
 }

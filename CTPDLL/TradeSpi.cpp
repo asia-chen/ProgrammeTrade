@@ -649,6 +649,7 @@ int CTradeSpi::ReqOrderInsert(vector<string> v, int nRequestID)
 	inputOrder.ForceCloseReason  = THOST_FTDC_FCC_NotForceClose;
 	///自动挂起标志 ?? 
 	inputOrder.IsAutoSuspend  = 0;
+	inputOrder.RequestID = nRequestID;
 
 	return m_pTradeApi->ReqOrderInsert(&inputOrder, nRequestID);
 }

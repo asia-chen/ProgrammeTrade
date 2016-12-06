@@ -218,6 +218,15 @@ namespace PubTools.data
 
             int index = instrumentIndex[md.InstrumentID];
             marketData[index - 1].Add(md);
+
+            int thisCount = marketData[index - 1].Count;
+            long thisVolume = 0;
+
+            if ( thisCount>= 2)
+            {
+                thisVolume = marketData[index - 1][thisCount - 1].Volume - marketData[index - 1][thisCount - 2].Volume;
+            }
+            FormTool.DisplayMarketData(md.GetData(thisVolume));
         }
         // -----------------------------------------------------------
         /// <summary>获取合约最新行情</summary>
