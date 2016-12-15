@@ -284,11 +284,22 @@ namespace PubTools.data
             // 每记录字段数
             int eachrecord = 43;
 
-            for (int i = 0; i < numPosition; i++)
+            lock (this.position)
             {
-                UserPosition tmp_position = new UserPosition();
-                tmp_position.SetData(resStr, i * eachrecord + 6);
-                this.position.Add(tmp_position);
+                for (int i = 0; i < numPosition; i++)
+                {
+                    UserPosition tmp_position = new UserPosition();
+                    tmp_position.SetData(resStr, i * eachrecord + 6);
+
+                    // 过滤0持仓记录
+                    if (tmp_position.Position == 0)
+                        continue;
+
+                    // 循环查找，合并同合约、同方向持仓
+                    // TODO
+
+                    this.position.Add(tmp_position);
+                }
             }
             return 0;
         }
@@ -335,7 +346,7 @@ namespace PubTools.data
         /// <param name="price">价格</param>
         /// <param name="volume">数量</param>
         /// <param name="orderType">委托类型，两位数字字符串，影响OrderLocalID</param>
-        /// <returns>0 成功 -1 委托类型长度错误，-2 委托类型内容错误</returns>
+        /// <returns>-1 委托类型长度错误，-2 委托类型内容错误 -3 发送错误 成功：请求编号（orderref）</returns>
         public int ReqOrderInsert(String instrumentID, String direction, String offsetFlag, double price, long volume,String orderType)
         {
             if (orderType.Length != 2)
@@ -365,16 +376,24 @@ namespace PubTools.data
             para[8] = offsetFlag;
             para[9] = price.ToString();
             para[10] = volume.ToString();
-            para[11] = orderType + DateTime.Now.ToString("HHmmssfff");
+            para[11] = requestID.ToString() + orderType;
 
             Console.WriteLine("Send an Order:" + para[11]);
-            return this.ctpApi.tradeSendRequest(para);
+            if(this.ctpApi.tradeSendRequest(para) == 0)
+                return (int)requestID;
+            else
+                return -3;
         }
 
         /// <summary>报单返回：目前仅处理错误信息</summary>
         private int onRspOrderInsert(String[] resStr)
         {
             FormTool.DisplayErrorMessage(resStr[7]);
+
+            String[] result = new String[2];
+            result[0] = resStr[0];
+            result[1] = resStr[7];
+            DataProcess.OrderError(result);
             return 0;
         }
 
@@ -402,6 +421,14 @@ namespace PubTools.data
                         order.RemoveAt(i);
                     }
                     this.order.Add(thisorder);
+                }
+                else if(thisorder.OrderSysID.Trim().Equals("") && thisorder.OrderStatus.Equals("5"))
+                {
+                    String[] result = new String[2];
+                    int len = resStr[9].Length - 2;
+                    result[0] = resStr[9].Substring(0, len);
+                    result[1] = resStr[56];
+                    DataProcess.OrderError(result);
                 }
             }
 
@@ -444,7 +471,12 @@ namespace PubTools.data
         {
             Trade thistrade = new Trade();
             thistrade.SetData(resStr, 0);
-            this.trade.Add(thistrade);
+            lock (this.trade)
+            {
+                this.trade.Add(thistrade);
+            }
+
+            DataProcess.TradeProcess(thistrade);
             return 0;
         }
 

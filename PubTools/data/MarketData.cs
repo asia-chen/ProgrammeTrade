@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using System.Collections;
+
 namespace PubTools.data
 {
     public class MarketData
@@ -27,11 +29,13 @@ namespace PubTools.data
         private String mdAddr;
 
         // 
-        Dictionary<String, int> instrumentIndex = null;
+        public Dictionary<String, int> instrumentIndex = null;
         List<List<MD>> marketData = null;
+        
 
         public MarketData(String _brokerID, String _userID, String _password, String _mdAddr)
         {
+
             marketData = new List<List<MD>>();
             instrumentIndex = new Dictionary<string, int>();
 
@@ -134,11 +138,14 @@ namespace PubTools.data
 
 
         /// <summary>订阅行情</summary>
-        /// <returns>0 成功发出请求；-1 未连接</returns>
+        /// <returns>0 成功发出请求；-1 未连接 -2 已订阅</returns>
         public int SubscribeMarketData(String instrumentID)
         {
             if (currStatus != 2)
                 return -1;
+
+            if (instrumentIndex.ContainsKey(instrumentID))
+                return -2;
 
             String[] para = new String[7];
 
@@ -160,11 +167,17 @@ namespace PubTools.data
             if (resStr[3].Equals("0"))
             {
                 FormTool.DisplayStatusMessage("订阅行情成功");
-
-                // 本地索引数据添加
-                List<MD> md = new List<MD>();
-                marketData.Add(md);
-                instrumentIndex.Add(resStr[6], marketData.Count);
+                if (!instrumentIndex.ContainsKey(resStr[6]))
+                {
+                    // 本地索引数据添加
+                    List<MD> md = new List<MD>();
+                    marketData.Add(md);
+                    instrumentIndex.Add(resStr[6], marketData.Count);
+                }
+                else
+                {
+                    Console.WriteLine("Already subscript: " + resStr[6]);
+                }
             }
             else
             {
@@ -173,11 +186,14 @@ namespace PubTools.data
         }
 
         /// <summary>退订行情</summary>
-        /// <returns>0 成功发出请求；-1 未连接</returns>
+        /// <returns>0 成功发出请求；-1 未连接 -2 未订阅</returns>
         public int UnSubscribeMarketData(String instrumentID)
         {
             if (currStatus != 2)
                 return -1;
+
+            if (!instrumentIndex.ContainsKey(instrumentID))
+                return -2;
 
             String[] para = new String[7];
 

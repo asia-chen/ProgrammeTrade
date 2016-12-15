@@ -45,6 +45,7 @@
     <Compile Include="CtpMdApi.cs" />
     <Compile Include="DataTool.cs" />
     <Compile Include="data\Account.cs" />
+    <Compile Include="data\DataProcess.cs" />
     <Compile Include="data\MarketData.cs" />
     <Compile Include="data\MD.cs" />
     <Compile Include="data\Order.cs" />

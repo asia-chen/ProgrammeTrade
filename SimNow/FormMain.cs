@@ -11,6 +11,7 @@ using PubTools;
 using PubTools.data;
 using System.Threading;
 using System.Text.RegularExpressions;
+using System.Collections;
 
 namespace SimNow
 {
@@ -42,6 +43,15 @@ namespace SimNow
             this.Left = 0;
 
             mdDisplay = new BindingList<MdDisplay>();
+
+
+
+            //Hashtable ht = null;
+            //ht = new Hashtable();
+            //ht.Add("1", new MD());
+            //ht.Add("1", new MD());
+
+
         }
 
         private void FormMain_Load(object sender, EventArgs e)
@@ -59,6 +69,8 @@ namespace SimNow
 
             GlobalVar.currForm = this;
             FormTool.setStatusMessage = this.setStatusImpl;
+            FormTool.setStatusMessage += this.displayConsole;
+
             FormTool.setErrMessage = this.setStatusImpl;
             FormTool.setMarketData = this.displayMarketData;
             FormTool.accountProcess = this.displayFund;
@@ -141,7 +153,7 @@ namespace SimNow
                 OpenOrClose = Const.TradeClose;
             }
 
-            myuser.ReqOrderInsert(this.tbInstrumentID.Text, BuyOrSell, OpenOrClose, price, volume, "99");
+            myuser.ReqOrderInsert(this.tbInstrumentID.Text, BuyOrSell, OpenOrClose, price, volume, "00");
         }
 
         /// <summary>/// 显示状态栏信息/// </summary>
@@ -181,6 +193,7 @@ namespace SimNow
             marketdata = new MarketData("9999", "054108", "961123", "tcp://180.168.146.187:10010");
             bMDConnect.Enabled = false;
             bMDLogin.Enabled = true;
+            FormTool.setStatusMessage -= this.displayConsole;
         }
 
         private void bMDLogin_Click(object sender, EventArgs e)
@@ -245,6 +258,11 @@ namespace SimNow
         private void bRefreshPosition_Click(object sender, EventArgs e)
         {
             myuser.ReqQryPosition();
+        }
+
+        private void displayConsole(String msg)
+        {
+            Console.WriteLine("this is the second fundtion: " + msg);
         }
     }
 }
