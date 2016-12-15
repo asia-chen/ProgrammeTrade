@@ -986,6 +986,8 @@ void CMdSpi::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThostFt
 			result = result + splitstr + "0";
 			result = result + splitstr + "µÇÂ¼³É¹¦";
 		}
+		result = result + splitstr + "1";
+		result = result + splitstr + (string)pRspUserLogin->TradingDay;
 		MdResponse((char *)result.c_str());
 	}
 	return;

@@ -23,5 +23,10 @@ namespace PubTools
         public const String TradeOpen = "0";
         public const String TradeCloseToday = "3";
         public const String TradeClose = "4";
+
+        /// <summary>今仓</summary>
+        public const String THOST_FTDC_PSD_Today = "1";
+        /// <summary>昨仓</summary>
+        public const String THOST_FTDC_PSD_History = "2";
     }
 }

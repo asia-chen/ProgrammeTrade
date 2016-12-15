@@ -133,7 +133,7 @@ namespace PubTools.data
                 connectMsg = "MD: " + resStr[4];
             }
 
-            FormTool.DisplayStatusMessage(connectMsg);
+            FormTool.DisplayStatusMessage(connectMsg + "|" + resStr[6]);
         }
 
 

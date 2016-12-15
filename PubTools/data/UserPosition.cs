@@ -23,9 +23,9 @@ namespace PubTools.data
         ///投机套保标志
         String HedgeFlag;
         ///持仓日期
-        String PositionDate;  ///今日持仓 THOST_FTDC_PSD_Today '1'; 历史持仓  THOST_FTDC_PSD_History '2'
+        public String PositionDate { get; set; }  ///今日持仓 THOST_FTDC_PSD_Today '1'; 历史持仓  THOST_FTDC_PSD_History '2'
         ///上日持仓
-        long YdPosition;
+        public long YdPosition { get; set; }
         ///今日持仓
         public long Position { get; set; }
         ///多头冻结

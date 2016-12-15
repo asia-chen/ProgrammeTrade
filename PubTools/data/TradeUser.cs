@@ -296,9 +296,24 @@ namespace PubTools.data
                         continue;
 
                     // 循环查找，合并同合约、同方向持仓
-                    // TODO
+                    int j = 0;
+                    for (j = 0; j < position.Count; j++)
+                    {
+                        if(tmp_position.InstrumentID.Equals(position[j].InstrumentID) && tmp_position.PosiDirection.Equals(position[j].PosiDirection))
+                            break;
+                    }
 
-                    this.position.Add(tmp_position);
+                    if(j>=position.Count)
+                    {
+                        this.position.Add(tmp_position);
+                    }
+                    else
+                    {
+                        if(tmp_position.PositionDate.Equals(Const.THOST_FTDC_PSD_Today))
+                        {
+                            // position[j].
+                        }
+                    }
                 }
             }
             return 0;
