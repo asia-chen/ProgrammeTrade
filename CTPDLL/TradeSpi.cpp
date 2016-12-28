@@ -500,13 +500,13 @@ void CTradeSpi::OnRtnTrade(CThostFtdcTradeField *pTrade)
 }
 
 // 查询合同
-int CTradeSpi::ReqQryInstrument(char *brokerID, char *userID, int nRequestID)
+int CTradeSpi::ReqQryInstrument(char *brokerID, char *userID, int nRequestID, char *instrumentID)
 {
 	CThostFtdcQryInstrumentField qryInstrument;
 	memset(&qryInstrument, 0, sizeof(CThostFtdcQryInstrumentField));
 
 	//  空值代表查询全部合同，可模糊查询
-	strcpy_s(qryInstrument.InstrumentID, sizeof(TThostFtdcInstrumentIDType), ""); 
+	strcpy_s(qryInstrument.InstrumentID, sizeof(TThostFtdcInstrumentIDType), instrumentID); 
 
 	return m_pTradeApi->ReqQryInstrument(&qryInstrument, nRequestID);	
 }

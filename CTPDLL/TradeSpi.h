@@ -40,7 +40,7 @@ class CTradeSpi : public CThostFtdcTraderSpi
 	virtual void OnRtnTrade(CThostFtdcTradeField *pTrade);
 
 	///查询合约
-	virtual int ReqQryInstrument(char *brokerID, char *userID, int nRequestID);
+	virtual int ReqQryInstrument(char *brokerID, char *userID, int nRequestID, char *instrumentID);
 	virtual void OnRspQryInstrument(CThostFtdcInstrumentField *pInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
 	// 报单请求

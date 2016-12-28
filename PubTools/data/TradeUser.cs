@@ -43,6 +43,8 @@ namespace PubTools.data
         public BindingList<Trade> trade { get; set; }
         /// 持仓
         public BindingList<UserPosition> position { get; set; }
+        /// 合约
+        public Dictionary<String, data.Instrument> instruments { get; set; }
 
         /// <summary>
         /// 构造函数，初始化变量及CTP连接
@@ -65,6 +67,7 @@ namespace PubTools.data
             order = new BindingList<Order>();
             trade = new BindingList<Trade>();
             position = new BindingList<UserPosition>();
+            instruments = new Dictionary<string, Instrument>();
         }
 
         /// <summary>
@@ -125,12 +128,12 @@ namespace PubTools.data
             /*if (resStr[1].Equals("Query") && resStr[2].Equals("marginrate"))
             {
                 //  thisTradeUser.onReqQryMarginRate(resStr);
-            }
+            }*/
             if (resStr[1].Equals("Query") && resStr[2].Equals("instrument"))
             {
-                onReqQryInstrument(resStr);
+                OnRspQryInstrument(resStr);
                 return;
-            }*/
+            }
         }
 
         // -----------------------------------------------------------
@@ -299,17 +302,17 @@ namespace PubTools.data
                     int j = 0;
                     for (j = 0; j < position.Count; j++)
                     {
-                        if(tmp_position.InstrumentID.Equals(position[j].InstrumentID) && tmp_position.PosiDirection.Equals(position[j].PosiDirection))
+                        if (tmp_position.InstrumentID.Equals(position[j].InstrumentID) && tmp_position.PosiDirection.Equals(position[j].PosiDirection))
                             break;
                     }
 
-                    if(j>=position.Count)
+                    if (j >= position.Count)
                     {
                         this.position.Add(tmp_position);
                     }
                     else
                     {
-                        if(tmp_position.PositionDate.Equals(Const.THOST_FTDC_PSD_Today))
+                        if (tmp_position.PositionDate.Equals(Const.THOST_FTDC_PSD_Today))
                         {
                             // position[j].
                         }
@@ -419,6 +422,11 @@ namespace PubTools.data
             {
                 Order thisorder = new Order();
                 thisorder.SetData(resStr, 0);
+
+                // 根据返回报单修改请求号，确保不重复（与订阅流的方式相关）
+                long thisRequestID = long.Parse(thisorder.OrderRef) / 100;
+                if (requestID < thisRequestID)
+                    requestID = thisRequestID + 1;
 
                 // TODO: 对于拒绝的报单，如何展示、存储，需完善
                 if (thisorder.OrderSysID != null && !thisorder.OrderSysID.Trim().Equals(""))
@@ -537,16 +545,20 @@ namespace PubTools.data
                 this.marginrate.Add(tmp_marginrate);
             }
             return 0;
-        }
+        }*/
 
-        // --------------------------------------------------------------------------------
-        // 查询合约
-        public int ReqQryInstrument()
+        /// --------------------------------------------------------------------------------
+        /// <summary>查询合约</summary>
+        /// <param name="instrumentID">合约代码，空为查询全部</param>
+        public int ReqQryInstrument(String instrumentID)
         {
             if (this.ctpApi == null)
                 return -1;
 
-            String[] para = new String[6];
+            if (instrumentID == null)
+                instrumentID = "";
+
+            String[] para = new String[7];
 
             para[0] = requestID.ToString();
             requestID++;
@@ -556,19 +568,18 @@ namespace PubTools.data
             para[3] = this.brokerID.Trim();
             para[4] = this.userID.Trim();
             para[5] = "";
+            para[6] = instrumentID;
 
-            this.ctpApi.tradeSendRequest(para);
-            return 0;
+            return this.ctpApi.tradeSendRequest(para);
         }
 
-        public int onReqQryInstrument(String[] resStr)
+        public int OnRspQryInstrument(String[] resStr)
         {
-            if (this.instrument == null)
+            if (this.instruments == null)
             {
-                this.instrument = new List<Instrument>();
+                this.instruments = new Dictionary<string, Instrument>();
             }
 
-            this.instrument.Clear();
             // 记录数
             int numInstrument = int.Parse(resStr[5]);
             // 每记录字段数
@@ -578,10 +589,14 @@ namespace PubTools.data
             {
                 Instrument tmp_instrument = new Instrument();
                 tmp_instrument.SetData(resStr, i * eachrecord + 6);
-                this.instrument.Add(tmp_instrument);
+
+                if (!instruments.ContainsKey(tmp_instrument.InstrumentID))
+                {
+                    this.instruments.Add(tmp_instrument.InstrumentID, tmp_instrument);
+                }
             }
             return 0;
         }
-        */
+        
     }
 }

@@ -210,7 +210,7 @@ int TradeSendRequest(char *req)
 		}
 		else if (requesttype == "instrument")
 		{
-			result = spi_ptr->ReqQryInstrument((char *)v[3].c_str(), (char *)v[4].c_str(), nRequestID);
+			result = spi_ptr->ReqQryInstrument((char *)v[3].c_str(), (char *)v[4].c_str(), nRequestID, (char *)v[6].c_str());
 		}
 	}
 	else if (modulename == "Order")
