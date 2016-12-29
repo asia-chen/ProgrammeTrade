@@ -281,7 +281,6 @@ namespace PubTools.data
                 this.position = new BindingList<UserPosition>();
             }
 
-            this.position.Clear();
             // 记录数
             int numPosition = int.Parse(resStr[5]);
             // 每记录字段数
@@ -289,6 +288,7 @@ namespace PubTools.data
 
             lock (this.position)
             {
+                this.position.Clear();
                 for (int i = 0; i < numPosition; i++)
                 {
                     UserPosition tmp_position = new UserPosition();
@@ -312,12 +312,25 @@ namespace PubTools.data
                     }
                     else
                     {
-                        if (tmp_position.PositionDate.Equals(Const.THOST_FTDC_PSD_Today))
+                        // if (tmp_position.PositionDate.Equals(Const.THOST_FTDC_PSD_Today))
                         {
-                            // position[j].
+                            tmp_position.YdPosition += position[j].YdPosition;
+                            tmp_position.Position += position[j].Position;
+                            tmp_position.PositionCost += position[j].PositionCost;
+                            tmp_position.UseMargin += position[j].UseMargin;
+                            tmp_position.PositionProfit += position[j].PositionProfit;
+
+                            position.RemoveAt(j);
+                            position.Insert(j, tmp_position);
                         }
                     }
                 }
+            }
+
+
+            for (int i = 0; i < this.position.Count; i++)
+            {
+                Console.WriteLine("position: " + this.position[i].Position.ToString());
             }
             return 0;
         }

@@ -90,6 +90,7 @@
             this.gridColumn21 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridColumn22 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.bRefreshPosition = new System.Windows.Forms.Button();
             this.bFundRefresh = new System.Windows.Forms.Button();
             this.label8 = new System.Windows.Forms.Label();
             this.tbPositionProfit = new System.Windows.Forms.TextBox();
@@ -106,7 +107,6 @@
             this.gridColumn26 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridColumn28 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.rtsPosition = new DevExpress.Data.RealTimeSource();
-            this.bRefreshPosition = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -756,6 +756,16 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "资金";
             // 
+            // bRefreshPosition
+            // 
+            this.bRefreshPosition.Location = new System.Drawing.Point(322, 74);
+            this.bRefreshPosition.Name = "bRefreshPosition";
+            this.bRefreshPosition.Size = new System.Drawing.Size(135, 34);
+            this.bRefreshPosition.TabIndex = 16;
+            this.bRefreshPosition.Text = "刷新持仓";
+            this.bRefreshPosition.UseVisualStyleBackColor = true;
+            this.bRefreshPosition.Click += new System.EventHandler(this.bRefreshPosition_Click);
+            // 
             // bFundRefresh
             // 
             this.bFundRefresh.Location = new System.Drawing.Point(322, 33);
@@ -909,16 +919,6 @@
             // 
             this.rtsPosition.DisplayableProperties = null;
             this.rtsPosition.UseWeakEventHandler = true;
-            // 
-            // bRefreshPosition
-            // 
-            this.bRefreshPosition.Location = new System.Drawing.Point(322, 74);
-            this.bRefreshPosition.Name = "bRefreshPosition";
-            this.bRefreshPosition.Size = new System.Drawing.Size(135, 34);
-            this.bRefreshPosition.TabIndex = 16;
-            this.bRefreshPosition.Text = "刷新持仓";
-            this.bRefreshPosition.UseVisualStyleBackColor = true;
-            this.bRefreshPosition.Click += new System.EventHandler(this.bRefreshPosition_Click);
             // 
             // FormMain
             // 

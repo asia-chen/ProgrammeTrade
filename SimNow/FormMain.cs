@@ -34,7 +34,7 @@ namespace SimNow
             public String Volume { get; set; }
         }
         BindingList<MdDisplay> mdDisplay { get; set; }
-
+        int pos = 0;
 
         public FormMain()
         {
@@ -264,5 +264,6 @@ namespace SimNow
         {
             Console.WriteLine("this is the second fundtion: " + msg);
         }
+
     }
 }
